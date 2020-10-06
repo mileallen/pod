@@ -4,14 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>No framework!</title>
+    <title>Todo demo with Pod.js</title>
 
     <style>
         html, body{
             height: 100%;
         }
-        a:link {
+        h1 {
             color: rgb(80, 55, 17);
+            font-weight: 300;
+            text-align: center;
         }
         body {
             display: flex;
@@ -23,7 +25,7 @@
             border-radius: 5px;
             border: none;
             padding: 0.5rem;
-            background:#ffdead
+            background:#ffedd2
         }
         .tditem {
             margin: 0.5rem;
@@ -31,16 +33,19 @@
             background: #e4d39d;
             color: #774c13;
             border-radius: 5px;
+            display: grid;
+            grid-template-columns: 1fr 10% 10%;
+            gap: 0.5rem;
         }
         .tditem[data-done=true] .tdNote{
             text-decoration: line-through;
-        }
-        .right{
         }
         button {
             background:#927a55;
             border: 1px #804f01 solid;
             color: #ffdaa2;
+            font-size: large;
+            border-radius: 1rem;
         }
         button:hover {
             filter: brightness(130%);
@@ -52,20 +57,24 @@
 
 <body>
 
-    <div id="page" class="main" podwrap>
+    <div id="page">
 
         <h1>Todo List</h1>
 
         <div>
-            <div><input type="text" name="label" id="" pMod="lbl1" placeholder="New item">
+            <div><input type="text" pMod="lbl1" placeholder="New item">
                 <button onclick="app.todos.add({note: app.lbl1, done: false})" >add</button>
                 <br><br>
                 
             <div> <template pFor="todos"> 
                 <div class="tditem" data-done="false">
-                    <span class="tdNote" pText="todo.note">Try template in a loop</span>
-                    <input class="right" type="checkbox" pBind="idx:todo.key" oninput="app.todos.set(this.getAttribute('idx'), 'done', this.checked)" ></input>
-                    <button class="right" pBind="idx:todo.key" onclick="app.todos.del(this.getAttribute('idx'))" >&times;</button>
+                    <div><span class="tdNote" pText="todo.note">Item goes here</span></div>
+                    <div>
+                    <input type="checkbox" pBind="idx:todo.key" oninput="app.todos.set(this.getAttribute('idx'), 'done', this.checked)" ></input>
+                    </div>
+                    <div>
+                    <button pBind="idx:todo.key" onclick="app.todos.del(this.getAttribute('idx'))" >&times;</button>
+                    </div>
                 </div>
             </template></div>
         </div>
