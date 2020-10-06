@@ -1,5 +1,5 @@
 
-# About this and about using this
+# About using this
 
 Pod is a class that supplies a number of helper methods to manipulate the DOM, to match the way most JS frameworks do. It is specifically meant for lightweight web pages that you would like to design like an app, in a declarative way, but without the costs of a framework. It's a 'vanilla' Pod, get it? 😁 You can design components inside templates that will be rendered on demand. Elements can have their text content or an attribute bound to a proxy variable, which you declare right in the markup. For input and textarea elements, the binding is of-course two-way. You might notice that the markup syntax is influenced by frameworks like Vue for a quick learning curve.
 
