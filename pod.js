@@ -37,7 +37,7 @@ class Pod {
             e.addEventListener('input', () => this.setVar(e.getAttribute('pMod'), e.value) )
         })
         bs.forEach( e => {
-            let bnd = e.getAttribute('pBind').split('=')                
+            let bnd = e.getAttribute('pBind').split(':')                
             this._elArr.push( { var: bnd[1], el: e, typ: "B", scp: tar, att: bnd[0]} )
         })
         this._fors.forEach( e => {
@@ -160,9 +160,9 @@ class Pod {
         } )
         let f = cln.querySelectorAll('[pBind]')
         f.forEach( el => {
-            let st = el.getAttribute('pBind').split('=')
+            let st = el.getAttribute('pBind').split(':')
             let bnd = st[1].split('.')                
-            el.setAttribute('pBind', `${st[0]}=${bnd[1]}`)
+            el.setAttribute('pBind', `${st[0]}:${bnd[1]}`)
         } )
         let g = cln.querySelectorAll('[pMod]')
         g.forEach( e => {
