@@ -22,7 +22,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         input {
-            border-radius: 5px;
+            border-radius: 10px;
             border: none;
             padding: 0.5rem;
             background:#ffedd2
@@ -42,7 +42,7 @@
         }
         button {
             background:#927a55;
-            border: 1px #804f01 solid;
+            border: none;
             color: #ffdaa2;
             font-size: large;
             border-radius: 1rem;
@@ -70,7 +70,7 @@
                 <div class="tditem" data-done="false">
                     <div><span class="tdNote" pText="todo.note">Item goes here</span></div>
                     <div>
-                    <input type="checkbox" pBind="idx:todo.key" oninput="app.todos.set(this.getAttribute('idx'), 'done', this.checked)" ></input>
+                    <input type="checkbox" pMod="todo.done"></input>
                     </div>
                     <div>
                     <button pBind="idx:todo.key" onclick="app.todos.del(this.getAttribute('idx'))" >&times;</button>
@@ -88,7 +88,7 @@
 
     const ary = [ 
         {note: "todo item 1", done: false},
-        {note: "todo item 2", done: false},  
+        {note: "todo item 2", done: true},  
         {note: "todo item 3", done: false} ]
 
 
