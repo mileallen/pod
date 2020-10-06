@@ -3,7 +3,7 @@
 
 Pod is a class that supplies a number of helper methods to manipulate the DOM, to match the way most JS frameworks do. It is specifically meant for lightweight web pages that you would like to design like an app, in a declarative way, but without the costs of a framework. It's a 'vanilla' Pod, get it? 😁 You can design components inside templates that will be rendered on demand. Elements can have their text content or an attribute bound to a proxy variable, which you declare right in the markup. For input and textarea elements, the binding is of-course two-way. You might notice that the markup syntax is influenced by frameworks like Vue for a quick learning curve.
 
-A demonstration as a word-linking game app is [here](https://pod.js.org/verba). It is <25 Kb in all of uncommprepssed HTML, CSS and JS. And of course, the obligatory [todo app](https://pod.js.org/todos).
+A demonstration as a word-linking game app is [here](https://pod.js.org/verba). It is <25 Kb in all of uncompressed HTML, CSS and JS. And of course, the obligatory [todo app](https://pod.js.org/todos).
 
 [![game screenshot](verba/verba.png "A word linking game")](https://pod.js.org/verba)
 
@@ -17,17 +17,19 @@ In your own JS code assign the Pod class to a convenient name.
 
 `const app = Pod('app')`
 
+## Survey 1
+
 When initialised thus, the class surveys the children of the wrapper for a number of attributes: 'Survey 1' looks for pText, pMod, pBind, pFor and pRef.
 
 ### pText
 
-This attribute names a variable that will corespond to innerHTML for the element.
+This attribute names a variable that will correspond to innerHTML for the element.
 
-`<span pText="textVar1">Original text here was boring.</span>`
+`<span pText="textVar1"> Original text here is boring.</span>`
 
 ### pMod
 
-This attribute turns an input or textarea element itno a two-way data model, the value is stored in the variable named by the attribute and is maintained in sync with the input value.
+This attribute turns an input or textarea element into a two-way data model, the value is stored in the variable named by the attribute and is maintained in sync with the input value.
 
 `<input type="range" pMod="classTheme">`
 
@@ -40,7 +42,7 @@ This attribute binds the value of another attribute specified to the variable na
 
 ### pRefs
 
-This is simply to add meaningful identifiers to elements. Obviously it doesn't do much that querySelector cannot. It is just to add consistency to your app's syntax for readability. 
+This is simply to add meaningful identifiers to elements. Obviously it doesn't do much that `querySelector` cannot. It is just to add consistency to your app's syntax for readability. 
 
 `<div pRef="scorePanel"></div>`
 
@@ -61,9 +63,7 @@ app.scorePanel.style.opacity = 0
 
 ### pFor
 
-Managing array variables and rendering items in loops makes a bulk of the class. In fact, if you don't intend to display an array variable, you can cull `loop()` and the next 3 methods - `insert()`, `reKey()`, `reformat()` - to get an even lighter Pod class.
-
-Below is an example of usage from the included demo game app. The game looks up word relations on an API from datamuse.com. When the fetch 'promise' is fulfilled, the list of words is assigned to the variable 'qWords'. We want each word to be displayed, with a function invoked 'onclick', to which we pass the selected word. We also wish to assign a couple of conditional classes depending on whether the word was picked or not.
+Below is an example of usage from the included demo game app. The game looks up word relations on an API from datamuse.com. When the fetch 'promise' is fulfilled, the list of words is assigned to the variable `qWords`. We want each word to be displayed, with a function invoked `onclick`, to which we pass the selected word. We also wish to assign a couple of conditional classes depending on whether the word was picked to proceed to the next link or not.
 
 Here is how you achieve that:
 
@@ -77,7 +77,7 @@ Here is how you achieve that:
 </div>
 
 ```
-The template content itended for items should be inside a single outer container `div`. Above, that is where we have assigned the class `fetched`. The template itself should also be enclosed in a single div all its own, with no other content with it. As is the case in the game with the `div` assigned the class `grid2`.
+The template content itended for items should be inside a single outer container `div`. Above, that is where we have assigned the class `fetched`. The template tag itself should also be enclosed in a single div all its own, with no other content within it. As is the case in the game snippet with the `div` assigned the class `grid2`.
 
 So you want:
 
@@ -91,9 +91,9 @@ So you want:
 </div>
 ```
 
-Note that the template is rendered for each item in the array, and each component is actually a Pod class in itself. As such, the parent div in the template is its 'wrapper'. That is why you see the data-variables delclared on it, to assign those conditional classes the samee way as the main app warpper.
+Note that the template is rendered for each item in the array, and each component is actually a Pod class in itself, though not exposed to the user directly. As such, the parent `div` in the template is its 'wrapper'. That is why you see the `data-` variables declared on it, to assign those conditional classes the samee way as the main app wrapper (see the section 'Classes' below).
 
-To add, delete items or update individual proteties on items, you can use the following methods:
+To add, delete items or to update individual proteties on items, you can use the following methods:
 
 ```
 app.qWords.add( {key1: value1, key2: value2...}, [index] )
@@ -104,19 +104,19 @@ app.qWords.set(index, key, value)
 
 ```
 
-With `.add`, `index` is optional. If omitted, the item is appended at the end of the array. To assign one of those data- variables above for instance, you would use
+With `.add`, `index` is optional. If omitted, the item is appended at the end of the array. To assign one of those `data-` variables above for instance, you would use
 
 `app.qWords.set(index, 'matched', true)`
 
-
+Pro-tip: Managing array variables and rendering items in loops makes a bulk of the class. In fact, if you don't intend to display an array variable, you can cull `loop()` and the next 3 methods - `insert()`, `reKey()`, `reformat()` - to get an even lighter Pod class.
 
 ## Survey 2
 
-Survey 2 looks for component containers and templates, i.e., pShows, pComps and compids.
+Survey 2 looks for component containers and templates, i.e., `pShow`s, `pComp`s and `compid`s.
 
 ### pShow
 
-Use this to show or hide a component template in its place. Add the pShow attribute to the div that will contain the template.
+Use this to show or hide a component template in its place. Add the `pShow` attribute to the `div` that will contain the template.
 
 ```
 <div pShow="componentVar0">
@@ -131,7 +131,7 @@ Use this to show or hide a component template in its place. Add the pShow attrib
 
 ### pComp & compid
 
-The former attribute marks a container `div` that can switch between mutiple components. Each alternative is declared in its own template, in turn marked with a `compid` attribute. Note: these `compid` templates need to be inside the scope of the wrapper div.
+The former attribute marks a container `div` that can switch between mutiple components. Each alternative is declared in its own template, in turn marked with a `compid` attribute. Note: these `compid` templates need to be inside the scope of the wrapper `div`.
 
 As with `pFor` loops, for all templates, be sure to put your component inside a single outer container div. It's ID is immaterial to Pod. 
 
