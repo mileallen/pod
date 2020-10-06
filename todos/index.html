@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No framework!</title>
+
+    <style>
+        html, body{
+            height: 100%;
+        }
+        a:link {
+            color: rgb(80, 55, 17);
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sect {
+            margin: 0.5rem;
+            padding: 0.5rem;
+        }
+        input {
+            border-radius: 5px;
+            border: none;
+            background:#b3a084
+        }
+        .extra {
+            background: #af9169;
+            color: #774c13;
+            border-radius: 5px;
+        }
+        .extra[data-done=true] .tdNote{
+            text-decoration: line-through;
+        }
+        button {
+            background:#927a55;
+            border: 1px #804f01 solid;
+            color: #ffdaa2;
+        }
+        button:hover {
+            filter: brightness(130%);
+        }
+        #templ1 {
+            opacity: 0;
+            transition: 0.7s ease;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <div id="page" class="main" podwrap>
+
+        <div>
+            <div><input type="text" name="label" id="" pMod="lbl1" placeholder="label">
+                <button onclick="app.todos.add({note: app.lbl1, done: false})" >add</button>
+                
+            <div> <template pFor="todos"> 
+                <div class="sect extra" data-done="false">
+                    <span class="tdNote" pText="todo.note">Try template in a loop</span>
+                    <input type="checkbox" pBind="idx=todo.key" oninput="app.todos.set(this.getAttribute('idx'), 'done', this.checked)" ></input>
+                    <button pBind="idx=todo.key" onclick="app.todos.del(this.getAttribute('idx'))" >&times;</button>
+                </div>
+            </template></div>
+        </div>
+
+
+    </div>
+
+    <script src="../pod.js"></script>
+
+    <script>
+
+    const ary = [ 
+        {note: "todo item 1", done: false},
+        {note: "todo item 2", done: false},  
+        {note: "todo item 3", done: false} ]
+
+
+    const app = new Pod({todos: ary})
+
+    </script>
+
+</body>
+
+</html>

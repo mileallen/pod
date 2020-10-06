@@ -11,10 +11,10 @@ class Pod {
     /* elArr is an array of all elements with 'watched' Pod attributes. cArr is an array of elements 
     with variables that set data- attributes on the wrapper element, used to set classes on children 
     through StyleSheet rules and selectors. vrObj records those key-value pairs for quick access. .dat 
-    provides the proxy to manipulate those values. The Pod class returns this proxy.
+    provides the proxy to manipulate those values from outside. The Pod class returns this proxy.
     */
-        this.survey0(w)
-        if(l) this.survey1(w)
+        this.survey1(w)
+        if(l) this.survey2(w)
         if(i) this.refresh(i)
 
         return new Proxy(this.dat, {
@@ -23,7 +23,7 @@ class Pod {
             get(t, k) { return t[`_${k}`] }
         })
     }
-    survey0(tar) {    // look up all the children for any of Pod's watched attributes. Note them in elArr.
+    survey1(tar) {    // look up all the children for any of Pod's watched attributes. Note them in elArr.
         let xs = tar.querySelectorAll('[pText]')
         let ds = tar.querySelectorAll('[pMod]')
         let bs = tar.querySelectorAll('[pBind]')
@@ -50,7 +50,7 @@ class Pod {
             this.dat[`_${rfid}`] = e
         })
     }
-    survey1(el){ // If called, also survey for components and their containers.
+    survey2(el){ // If called, also survey for components and their containers.
         this._shows = el.querySelectorAll('[pShow]')
         this._comps = el.querySelectorAll('[pComp]')
         this._views = el.querySelectorAll('template[compid]')
@@ -70,7 +70,7 @@ class Pod {
         this._vrObj[ky] = va
         let w = this._elArr.filter( i => i.var === ky )
         if( w && all ) w.forEach( w1 => this.update( w1, va ) )
-        else if( w && w.typ !== 'C' && w.typ !== 'N') this.update( w, va )
+        else if(w) w.forEach( w1 => { if(w1.typ !== 'C' && w1.typ !== 'N') this.update( w1, va ) } )
     }
     update(it, va) {
         switch(it.typ) { // check type of attribute to act on, then update the DOM
@@ -99,7 +99,7 @@ class Pod {
         let c = vw.content.firstElementChild.cloneNode(true)
         itl.ky = itl.el.appendChild(c)
         itl.in = true
-        this.survey0(itl.ky)          // run level 0 survey (for pTexts, pMods and pBinds) in template
+        this.survey1(itl.ky)          // run level 0 survey (for pTexts, pMods and pBinds) in template
         this.refresh(this._vrObj, false)
     }
     nix(itl){   // remove the component
@@ -109,6 +109,8 @@ class Pod {
         itl.in = false
         } 
     }
+    refresh(oj, s=true) { for( const [ke, vl] of Object.entries(oj) ) this.setVar(ke, vl, s)
+    }
     loop(itl, v=[]){       // 4 methods to deal with For loops declared in markup
         let arv = `_vu_${itl.var}`
         let aa = `_${itl.var}`
@@ -117,12 +119,11 @@ class Pod {
         this[arv] = []
         this.dat[aa] = v                    /* redundant in one case. test if(v===[]) this.dat[aa]=[] */
         let par = itl.el.parentElement
-        this.dat[aa].add = (ob) => {        // methods to add, delete and set array items
-            let l = this[arv].length
+        this.dat[aa].add = (ob, l = this[arv].length) => {
+            if (this[arv].length === 0) itl.in = true
             this.insert(ob, l, itl, par, arv)
             this.reKey(arv)
-            if(l===0) itl.in = true
-            this.dat[aa].push(ob)
+            this.dat[aa].splice(l, 0, ob)
             }
         this.dat[aa].del = (i) => {   
             this[arv][i].wrap.remove()
@@ -144,9 +145,9 @@ class Pod {
     }
     insert(ent, ij, it, pa, ar){  // ... render the template tagged 'pFor'
         let c = it.el.content.firstElementChild.cloneNode(true)
-        let e = pa.appendChild(c)               
+        let e = pa.insertBefore(c, pa.children[ij])               
         this.reformat(e)
-        this[ar][ij] = new Pod(null, ent, e, 0)
+        this[ar].splice(ij, 0, new Pod(null, ent, e, 0) )
     }
     reKey(ar){
         this[ar].forEach( (j, k) => j.key = k )
@@ -168,10 +169,6 @@ class Pod {
             let st = el.getAttribute('pMod').split('.')
             el.setAttribute('pMod', st[1] )
         } )
-    }
-    _vals = () => { return this._vrObj    // maybe don't need this outside?
-    }
-    refresh(oj, s=true) { for( const [ke, vl] of Object.entries(oj) ) this.setVar(ke, vl, s)
     }
 }
 
