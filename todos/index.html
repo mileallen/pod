@@ -4,141 +4,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#be1818">
-    <title>verba nex | make a chain of words</title>
+    <title>No framework!</title>
 
-    <link rel="stylesheet" href="./game.css">
-    <script src="../pod.js" type="text/javascript"></script>
+    <style>
+        html, body{
+            height: 100%;
+        }
+        a:link {
+            color: rgb(80, 55, 17);
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        input {
+            border-radius: 5px;
+            border: none;
+            padding: 0.5rem;
+            background:#ffdead
+        }
+        .tditem {
+            margin: 0.5rem;
+            padding: 0.5rem;
+            background: #e4d39d;
+            color: #774c13;
+            border-radius: 5px;
+        }
+        .tditem[data-done=true] .tdNote{
+            text-decoration: line-through;
+        }
+        .right{
+        }
+        button {
+            background:#927a55;
+            border: 1px #804f01 solid;
+            color: #ffdaa2;
+        }
+        button:hover {
+            filter: brightness(130%);
+        }
+    </style>
+
 
 </head>
 
-
 <body>
 
-<div id="verba" class="main" data-level-picked="false" data-fetching="false" data-stage=0 data-picked1="false" data-picked2="false" data-picked3="false" data-match-found="false" data-no-results="false">
+    <div id="page" class="main" podwrap>
 
-<header><div class="title">verba nex</div>
-    <div class="relationKey"><span style="--colour: var(--clr_rhy)">Rhyme </span><span style="--colour: var(--clr_syn)">Synonym </span><span style="--colour: var(--clr_jjb)">Adjective </span><span style="--colour: var(--clr_cns)">Consonants</span> </div>
-    <div class="appTalk explainTxt" pShow="showExplain"> <template><div>
-        <span class="closeX" onclick="wrdy.showExplain = !wrdy.showExplain"> &times;</span>
+        <h1>Todo List</h1>
+
         <div>
-            A word linking game. Try to connect 2 words in 4 hops! You can try four kinds of word relations, denoted by the colour keys.
-        </div></div>
-</template>
-    </div>
-
-</header>
-
-<div class="gamearea">
-
-           <div class="topPanel">
-          <div class="appTalk" pRef="dialogue">To start, pick a level - click 'L'</div>
-          
-          <div id="levelBut" class="topBut" onclick="setLevel()" pText="level"></div>
-
-
-            <div class="topBut" onclick="resetAll()">&#x1f5d8;
-            </div>
-          
-            </div>
-
-            <div class="botPanel">
-                <div class="progContain">
-                <div class="progInd"></div>
-                </div>
-            </div>
-            
-
-            <div class="grid g1">
-                <div class="wordEnd" pText="wordA"></div>
-
-                <div id="opts0">
-                    <div class="sqar sqar1" onclick="getList('rhy', wrdy.wordA)" title="Rhymes with"></div>
-                    <div class="sqar sqar2" onclick="getList('syn', wrdy.wordA)" title="Synonyms"></div>
-                    <div class="sqar sqar3" onclick="getList('jjb', wrdy.wordA)" title="Adjectives"></div>
-                    <div class="sqar sqar4" onclick="getList('cns', wrdy.wordA)" title="Consonants"></div>
-                </div>
-
-                <div>
-                <div id="mid1" pText="link1" class="wordMid"></div>
-                <div id="redo1" class="redoBut" onclick="goBack(0)">&#x21ba;</div>
-                </div>
-
-                <div id="opts1">
-                    <div class="sqar sqar1" onclick="getList('rhy', wrdy.link1)" title="Rhymes with"></div>
-                    <div class="sqar sqar2" onclick="getList('syn', wrdy.link1)" title="Synonyms"></div>
-                    <div class="sqar sqar3" onclick="getList('jjb', wrdy.link1)" title="Adjectives"></div>
-                    <div class="sqar sqar4" onclick="getList('cns', wrdy.link1)" title="Consonants"></div>
-                </div>
-
-                <div>
-                <div id="mid2" pText="link2" class="wordMid"></div>
-                <div id="redo2" class="redoBut" onclick="goBack(1)">&#x21ba;</div>
-                </div>
-
-
-                <div id="opts2">
-                    <div class="sqar sqar1" onclick="getList('rhy', wrdy.link2)" title="Rhymes with"></div>
-                    <div class="sqar sqar2" onclick="getList('syn', wrdy.link2)" title="Synonyms"></div>
-                    <div class="sqar sqar3" onclick="getList('jjb', wrdy.link2)" title="Adjectives"></div>
-                    <div class="sqar sqar4" onclick="getList('cns', wrdy.link2)" title="Consonants"></div>
-                </div>
-
-                <div>
-                <div id="mid3" pText="link3" class="wordMid"></div>
-                <div id="redo3" class="redoBut" onclick="goBack(2)">&#x21ba;</div>
-                </div>
-
-                <div  id="opts3">
-                    <div class="sqar sqar1" onclick="getList('rhy', wrdy.link3)" title="Rhymes with"></div>
-                    <div class="sqar sqar2" onclick="getList('syn', wrdy.link3)" title="Synonyms"></div>
-                    <div class="sqar sqar3" onclick="getList('jjb', wrdy.link3)" title="Adjectives"></div>
-                    <div class="sqar sqar4" onclick="getList('cns', wrdy.link3)" title="Consonants"></div>
-                </div>
-
-                <div id="targetWord" class="wordEnd" pText="wordB"></div>
+            <div><input type="text" name="label" id="" pMod="lbl1" placeholder="New item">
+                <button onclick="app.todos.add({note: app.lbl1, done: false})" >add</button>
+                <br><br>
                 
-
-            </div>
-
-            
-            <div class="g2"> <div class="resBox" pRef="results">
-
-                <div pShow="noResults">
-                    <template><div class="oops">!!!</div></template>
+            <div> <template pFor="todos"> 
+                <div class="tditem" data-done="false">
+                    <span class="tdNote" pText="todo.note">Try template in a loop</span>
+                    <input class="right" type="checkbox" pBind="idx:todo.key" oninput="app.todos.set(this.getAttribute('idx'), 'done', this.checked)" ></input>
+                    <button class="right" pBind="idx:todo.key" onclick="app.todos.del(this.getAttribute('idx'))" >&times;</button>
                 </div>
-
-                <div class="grid2">
-                    <template pFor="qWords"><div class="fetched" data-pick="false" data-kick="false" data-matched="false">
-                        <div class="" pText="qWord.word" pBind="idx:qWord.word" onclick="pickword(this.getAttribute('idx'))"> </div>
-                    </div> </template>
-                </div>
-
-
-            </div></div>
-
-
-
-
-
-        <div class="foot" style="flex: initial; align-self: flex-end; width:100%; padding-top: 2rem;">
-
-            <p
-                style="font-size: 0.9rem; color: rgba(133, 133, 133, 0.616); line-height: 1rem; margin-left: auto; margin-right: auto; width:80%; text-align: center;">
-                &copy; 2020 <a href="https://twitter.com/sachwry">Sach Wry</a></p>
+            </template></div>
         </div>
 
 
+    </div>
+
+    <script src="../pod.js"></script>
+
+    <script>
+
+    const ary = [ 
+        {note: "todo item 1", done: false},
+        {note: "todo item 2", done: false},  
+        {note: "todo item 3", done: false} ]
 
 
-</div>
+    const app = new Pod('page', {todos: ary})
 
-</div>
-
-<script src="./levelSet.js"></script>
-
-<script src="./logic.js"></script>
-
+    </script>
 
 </body>
 
