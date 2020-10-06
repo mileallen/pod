@@ -108,7 +108,7 @@ With `.add`, `index` is optional. If omitted, the item is appended at the end of
 
 `app.qWords.set(index, 'matched', true)`
 
-Pro-tip: Managing array variables and rendering items in loops makes a bulk of the class. In fact, if you don't intend to display an array variable, you can cull `loop()` and the next 3 methods - `insert()`, `reKey()`, `reformat()` - to get an even lighter Pod class.
+Tip: If you don't intend to display an array variable, you can use pod-lite.js, a much lighter Pod class.
 
 ## Survey 2
 

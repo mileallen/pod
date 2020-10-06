@@ -2,7 +2,7 @@
 argument. If there is a set of intial values to assign, pass that object as the second argument. */
 
 class Pod {
-    constructor(e=null, i=null, w = document.getElementById(e), l=1, ar=null) {
+    constructor(e, i=null, w = document.getElementById(e)) {
         this.dat = { _wrap: w, setVar: this.setVar.bind(this) }
         this._vrObj = {}
         this._elArr = []
@@ -13,8 +13,8 @@ class Pod {
     through StyleSheet rules and selectors. vrObj records those key-value pairs for quick access. .dat 
     provides the proxy to manipulate those values from outside. The Pod class returns this proxy.
     */
-        this.survey1(w, ar)
-        if(l) this.survey2(w)
+        this.survey1(w)
+        this.survey2(w)
         if(i) this.refresh(i)
 
         return new Proxy(this.dat, {
@@ -23,11 +23,10 @@ class Pod {
             get(t, k) { return t[`_${k}`] }
         })
     }
-    survey1(tar, a) {    // look up all the children for any of Pod's watched attributes. Note them in elArr.
+    survey1(tar) {    // look up all the children for any of Pod's watched attributes. Note them in elArr.
         let xs = tar.querySelectorAll('[pText]')
         let ds = tar.querySelectorAll('[pMod]')
         let bs = tar.querySelectorAll('[pBind]')
-        this._fors = tar.querySelectorAll('[pFor]')
         this._refs = tar.querySelectorAll('[pRef]')
         xs.forEach( e => {
             this._elArr.push( { var: e.getAttribute('pText'), el: e, typ: "T", scp: tar} )
@@ -35,19 +34,11 @@ class Pod {
         ds.forEach( e => {
             let elOb = { var: e.getAttribute('pMod'), el: e, typ: "M", scp: tar }
             this._elArr.push(elOb)
-            e.addEventListener('input', () => { 
-                if(a) a[this.dat._key][elOb.var] = e.type ==='checkbox' ? e.checked : e.value
-                this.setVar(e.getAttribute('pMod'), e.type ==='checkbox' ? e.checked : e.value) 
-            })
+            e.addEventListener('input', () => this.setVar(e.getAttribute('pMod'), e.type ==='checkbox' ? e.checked : e.value) )
         })
         bs.forEach( e => {
             let bnd = e.getAttribute('pBind').split(':')                
             this._elArr.push( { var: bnd[1], el: e, typ: "B", scp: tar, att: bnd[0]} )
-        })
-        this._fors.forEach( e => {
-            let elOb = { var: e.getAttribute('pFor'), el: e, typ: "L", scp: tar, in: false} 
-            this._elArr.push(elOb)
-            this.loop(elOb)
         })
         this._refs.forEach( e => {
             let rfid = e.getAttribute('pRef')                
@@ -90,8 +81,6 @@ class Pod {
                 break
             case "C": this.render(it, true, va)
                 break
-            case "L": this.loop(it, va)
-                break        
         }
     }
     render(itl, co=false, vl=null) {  // Clone the compoment from its template and render it
@@ -104,7 +93,7 @@ class Pod {
         let c = vw.content.firstElementChild.cloneNode(true)
         itl.ky = itl.el.appendChild(c)
         itl.in = true
-        this.survey1(itl.ky)          // run level 1 survey (for pTexts, pMods, pBinds & pFors) in template
+        this.survey1(itl.ky)          // run level 1 survey (for pTexts, pMods and pBinds) in template
         this.refresh(this._vrObj, false)
     }
     nix(itl){   // remove the component
@@ -116,89 +105,5 @@ class Pod {
     }
     refresh(oj, s=true) { for( const [ke, vl] of Object.entries(oj) ) this.setVar(ke, vl, s)
     }
-    loop(itl, v=[]){       // 4 methods to deal with pFor loops declared in markup
-        let arv = `_vu_${itl.var}`
-        let aa = `_${itl.var}`
-        if(itl.in) { this[arv].forEach( m => m.wrap.remove() ) }
-
-        this[arv] = []
-        this.dat[aa] = v                    
-        let par = itl.el.parentElement
-        this.dat[aa].add = (ob, l = this[arv].length) => {
-            if (this[arv].length === 0) itl.in = true
-            this.insert(ob, l, itl, par, aa)
-            this.reKey(arv)
-            this.dat[aa].splice(l, 0, ob)
-            }
-        this.dat[aa].del = (i) => {   
-            this[arv][i].wrap.remove()
-            this[arv].splice(i, 1)
-            this.reKey(arv)
-            if( this[arv].length === 0 ) itl.in = false
-            this.dat[aa].splice(i, 1)
-            }
-        this.dat[aa].set = (i, kk, vv) => {
-            this[arv][i][kk] = vv
-            this.dat[aa][i][kk] = vv
-        }
-        if(v.length) {        // For each item in array...
-            v.forEach( (itm, key) => { this.insert(itm, key, itl, par, aa) } )
-            itl.in = true
-            this.reKey(arv)
-        }
-        else itl.in =  false
-    }
-    insert(ent, ij, it, pa, ar){  // ... render the template tagged 'pFor'
-        let c = it.el.content.firstElementChild.cloneNode(true)
-        let e = pa.insertBefore(c, pa.children[ij])               
-        this.reformat(e)
-        this[`_vu${ar}`].splice(ij, 0, new Pod(null, ent, e, 0, this.dat[ar]) )
-    }
-    reKey(ar){
-        this[ar].forEach( (j, k) => j.key = k )
-    }
-    reformat(cln) {
-        let e = cln.querySelectorAll('[pText]')
-        e.forEach( el => {
-            let st = el.getAttribute('pText').split('.')
-            el.setAttribute('pText', st[1] )
-        } )
-        let f = cln.querySelectorAll('[pBind]')
-        f.forEach( el => {
-            let st = el.getAttribute('pBind').split(':')
-            let bnd = st[1].split('.')                
-            el.setAttribute('pBind', `${st[0]}:${bnd[1]}`)
-        } )
-        let g = cln.querySelectorAll('[pMod]')
-        g.forEach( el => {
-            let st = el.getAttribute('pMod').split('.')
-            el.setAttribute('pMod', st[1] )
-        } )
-    }
 }
-
-
-/* 
-sample helper for smoother transitions between views. Call dot(pod, panel, peek)
-*/
-
-function dot(cls, el, vr, on=true, d=10) {  
-    if(on) { 
-        if(typeof on === 'string') {
-            d = 300
-            cls[el].style.opacity = 0
-        }         
-        setTimeout(() => { 
-            cls[vr] = on
-            cls[el].style.opacity = 1 }, d)
-    }
-    else{
-        cls[el].style.opacity = 0
-        setTimeout(() => {
-            cls[vr] = false
-        }, 600)
-    }
-}
-
-
 
