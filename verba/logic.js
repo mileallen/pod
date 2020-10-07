@@ -82,22 +82,14 @@ async function getList(rel, verbum) {
 
 function pickword(choice) {
   wrdy.stage++
-  wrdy.qWords.forEach((obj, ky) => {
-    if (obj.word === choice) {
-      wrdy.qWords.set(ky, 'pick', true)
-    }
-    else {
-      wrdy.qWords.set(ky, 'kick', true)
-    }
-  })
+  wrdy.qWords.forEach((obj, ky) => obj.word === choice ? wrdy.qWords.set(ky, 'pick', true) : wrdy.qWords.set(ky, 'kick', true) )
   wrdy[`link${wrdy.stage}`] = choice
   wrdy[`picked${wrdy.stage}`] = true
 }
 
 
 function setLevel(){
-  if(wrdy.level === '1') wrdy.level = '2'
-  else wrdy.level = '1'
+  wrdy.level === '1' ? wrdy.level = '2' : wrdy.level = '1'
   let ix = Math.floor(Math.random() * 10)
   wrdy.wordA = wordPairs[`level${wrdy.level}`][ix].word1
   wrdy.wordB = wordPairs[`level${wrdy.level}`][ix].word2
