@@ -8,10 +8,10 @@ class Pod {
         this._elArr = []
         this._cArr = Object.keys(w.dataset)
 
-    /* elArr is an array of all elements with 'watched' Pod attributes. cArr is an array of elements 
-    with variables that set data- attributes on the wrapper element, used to set classes on children 
-    through StyleSheet rules and selectors. vrObj records those key-value pairs for quick access. .dat 
-    provides the proxy to manipulate those values from outside. The Pod class returns this proxy.
+    /* elArr is an array of all elements with 'watched' Pod attributes. cArr is an array of data- 
+    attributes on the wrapper element, used to set classes on children through StyleSheet rules and 
+    selectors. vrObj records those key-value pairs for quick access. .dat provides the proxy to 
+    manipulate those values from outside. The Pod class returns this proxy.
     */
         this.survey1(w, ar)
         if(l) this.survey2(w)
@@ -23,7 +23,7 @@ class Pod {
             get(t, k) { return t[`_${k}`] }
         })
     }
-    survey1(tar, a) {    // look up all the children for any of Pod's watched attributes. Note them in elArr.
+    survey1(tar, a) {    // look up all the children for any of Pod's watched attributes. Add them to elArr.
         let xs = tar.querySelectorAll('[pText]')
         let ds = tar.querySelectorAll('[pMod]')
         let bs = tar.querySelectorAll('[pBind]')
@@ -73,20 +73,18 @@ class Pod {
         this.dat[`_${ky}`] = va
         this._vrObj[ky] = va
         let w = this._elArr.filter( i => i.var === ky )
-        if( w && all ) w.forEach( w1 => this.update( w1, va ) )
-        else if(w) w.forEach( w1 => { if(w1.typ !== 'C' && w1.typ !== 'N') this.update( w1, va ) } )
+        if( w && all ) w.forEach( w1 => this.update(w1, va) )
+        else if(w) w.forEach( w1 => { if(w1.typ !== 'C' && w1.typ !== 'N') this.update(w1, va) } )
     }
     update(it, va) {
         switch(it.typ) { // check type of attribute to act on, then update the DOM
             case "T": it.el.innerHTML = va
                 break
-            case "M": if (it.el.type==='checkbox') it.el.checked = va
-                        else it.el.value = va
+            case "M": it.el.type==='checkbox' ? it.el.checked = va : it.el.value = va
                 break
             case "B": it.el.setAttribute(it.att, va)
                 break
-            case "N": if(va) this.render(it)
-                      else this.nix(it)
+            case "N": va ? this.render(it) : this.nix(it)
                 break
             case "C": this.render(it, true, va)
                 break
@@ -117,45 +115,43 @@ class Pod {
     refresh(oj, s=true) { for( const [ke, vl] of Object.entries(oj) ) this.setVar(ke, vl, s)
     }
     loop(itl, v=[]){       // 4 methods to deal with pFor loops declared in markup
-        let arv = `_vu_${itl.var}`
-        let aa = `_${itl.var}`
-        if(itl.in) { this[arv].forEach( m => m.wrap.remove() ) }
-
-        this[arv] = []
-        this.dat[aa] = v                    
+        let ar = `_${itl.var}`
+        if(itl.in) { this[ar].forEach( m => m.wrap.remove() ) }
+        this[ar] = []
+        this.dat[ar] = v                    
         let par = itl.el.parentElement
-        this.dat[aa].add = (ob, l = this[arv].length) => {
-            if (this[arv].length === 0) itl.in = true
-            this.insert(ob, l, itl, par, aa)
-            this.reKey(arv)
-            this.dat[aa].splice(l, 0, ob)
+        this.dat[ar].add = (ob, l = this[ar].length) => {
+            if (this[ar].length === 0) itl.in = true
+            this.insert(ob, l, itl, par, ar)
+            this.reKey(ar)
+            this.dat[ar].splice(l, 0, ob)
             }
-        this.dat[aa].del = (i) => {   
-            this[arv][i].wrap.remove()
-            this[arv].splice(i, 1)
-            this.reKey(arv)
-            if( this[arv].length === 0 ) itl.in = false
-            this.dat[aa].splice(i, 1)
+        this.dat[ar].del = (i) => {   
+            this[ar][i].wrap.remove()
+            this[ar].splice(i, 1)
+            this.reKey(ar)
+            if( this[ar].length === 0 ) itl.in = false
+            this.dat[ar].splice(i, 1)
             }
-        this.dat[aa].set = (i, kk, vv) => {
-            this[arv][i][kk] = vv
-            this.dat[aa][i][kk] = vv
+        this.dat[ar].set = (i, kk, vv) => {
+            this[ar][i][kk] = vv
+            this.dat[ar][i][kk] = vv
         }
         if(v.length) {        // For each item in array...
-            v.forEach( (itm, key) => { this.insert(itm, key, itl, par, aa) } )
+            v.forEach( (itm, key) => { this.insert(itm, key, itl, par, ar) } )
             itl.in = true
-            this.reKey(arv)
+            this.reKey(ar)
         }
         else itl.in =  false
     }
-    insert(ent, ij, it, pa, ar){  // ... render the template tagged 'pFor'
+    insert(ent, ij, it, pa, aa){  // ... render the template tagged 'pFor'
         let c = it.el.content.firstElementChild.cloneNode(true)
         let e = pa.insertBefore(c, pa.children[ij])               
         this.reformat(e)
-        this[`_vu${ar}`].splice(ij, 0, new Pod(null, ent, e, 0, this.dat[ar]) )
+        this[aa].splice(ij, 0, new Pod(null, ent, e, 0, this.dat[aa]) )
     }
-    reKey(ar){
-        this[ar].forEach( (j, k) => j.key = k )
+    reKey(av){
+        this[av].forEach( (j, k) => j.key = k )
     }
     reformat(cln) {
         let e = cln.querySelectorAll('[pText]')
@@ -179,7 +175,8 @@ class Pod {
 
 
 /* 
-sample helper for smoother transitions between views. Call dot(pod, panel, peek)
+sample helper for smoother transitions between views. Call dot(app, pRef var, pShow var / compid var)
+pRef var is assigned to the template's parent div.
 */
 
 function dot(cls, el, vr, on=true, d=10) {  

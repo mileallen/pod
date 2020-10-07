@@ -2,18 +2,18 @@
 argument. If there is a set of intial values to assign, pass that object as the second argument. */
 
 class Pod {
-    constructor(e, i=null, w = document.getElementById(e)) {
+    constructor(e=null, i=null, w = document.getElementById(e)) {
         this.dat = { _wrap: w, setVar: this.setVar.bind(this) }
         this._vrObj = {}
         this._elArr = []
         this._cArr = Object.keys(w.dataset)
 
-    /* elArr is an array of all elements with 'watched' Pod attributes. cArr is an array of elements 
-    with variables that set data- attributes on the wrapper element, used to set classes on children 
-    through StyleSheet rules and selectors. vrObj records those key-value pairs for quick access. .dat 
-    provides the proxy to manipulate those values from outside. The Pod class returns this proxy.
+    /* elArr is an array of all elements with 'watched' Pod attributes. cArr is an array of data- 
+    attributes on the wrapper element, used to set classes on children through StyleSheet rules and 
+    selectors. vrObj records those key-value pairs for quick access. .dat provides the proxy to 
+    manipulate those values from outside. The Pod class returns this proxy.
     */
-        this.survey1(w)
+        this.survey1(w, ar)
         this.survey2(w)
         if(i) this.refresh(i)
 
@@ -23,7 +23,7 @@ class Pod {
             get(t, k) { return t[`_${k}`] }
         })
     }
-    survey1(tar) {    // look up all the children for any of Pod's watched attributes. Note them in elArr.
+    survey1(tar, a) {    // look up all the children for any of Pod's watched attributes. Add them to elArr.
         let xs = tar.querySelectorAll('[pText]')
         let ds = tar.querySelectorAll('[pMod]')
         let bs = tar.querySelectorAll('[pBind]')
@@ -34,7 +34,10 @@ class Pod {
         ds.forEach( e => {
             let elOb = { var: e.getAttribute('pMod'), el: e, typ: "M", scp: tar }
             this._elArr.push(elOb)
-            e.addEventListener('input', () => this.setVar(e.getAttribute('pMod'), e.type ==='checkbox' ? e.checked : e.value) )
+            e.addEventListener('input', () => { 
+                if(a) a[this.dat._key][elOb.var] = e.type ==='checkbox' ? e.checked : e.value
+                this.setVar(e.getAttribute('pMod'), e.type ==='checkbox' ? e.checked : e.value) 
+            })
         })
         bs.forEach( e => {
             let bnd = e.getAttribute('pBind').split(':')                
@@ -64,20 +67,18 @@ class Pod {
         this.dat[`_${ky}`] = va
         this._vrObj[ky] = va
         let w = this._elArr.filter( i => i.var === ky )
-        if( w && all ) w.forEach( w1 => this.update( w1, va ) )
-        else if(w) w.forEach( w1 => { if(w1.typ !== 'C' && w1.typ !== 'N') this.update( w1, va ) } )
+        if( w && all ) w.forEach( w1 => this.update(w1, va) )
+        else if(w) w.forEach( w1 => { if(w1.typ !== 'C' && w1.typ !== 'N') this.update(w1, va) } )
     }
     update(it, va) {
         switch(it.typ) { // check type of attribute to act on, then update the DOM
             case "T": it.el.innerHTML = va
                 break
-            case "M": if (it.el.type==='checkbox') it.el.checked = va
-                        else it.el.value = va
+            case "M": it.el.type==='checkbox' ? it.el.checked = va : it.el.value = va
                 break
             case "B": it.el.setAttribute(it.att, va)
                 break
-            case "N": if(va) this.render(it)
-                      else this.nix(it)
+            case "N": va ? this.render(it) : this.nix(it)
                 break
             case "C": this.render(it, true, va)
                 break
@@ -93,7 +94,7 @@ class Pod {
         let c = vw.content.firstElementChild.cloneNode(true)
         itl.ky = itl.el.appendChild(c)
         itl.in = true
-        this.survey1(itl.ky)          // run level 1 survey (for pTexts, pMods and pBinds) in template
+        this.survey1(itl.ky)          // run level 1 survey (for pTexts, pMods, pBinds & pFors) in template
         this.refresh(this._vrObj, false)
     }
     nix(itl){   // remove the component
@@ -106,4 +107,30 @@ class Pod {
     refresh(oj, s=true) { for( const [ke, vl] of Object.entries(oj) ) this.setVar(ke, vl, s)
     }
 }
+
+
+/* 
+sample helper for smoother transitions between views. Call dot(app, pRef var, pShow var / compid var)
+pRef var is assigned to the template's parent div.
+*/
+
+function dot(cls, el, vr, on=true, d=10) {  
+    if(on) { 
+        if(typeof on === 'string') {
+            d = 300
+            cls[el].style.opacity = 0
+        }         
+        setTimeout(() => { 
+            cls[vr] = on
+            cls[el].style.opacity = 1 }, d)
+    }
+    else{
+        cls[el].style.opacity = 0
+        setTimeout(() => {
+            cls[vr] = false
+        }, 600)
+    }
+}
+
+
 
