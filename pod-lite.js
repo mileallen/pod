@@ -23,44 +23,29 @@ class Pod {
             get(t, k) { return t[`_${k}`] }
         })
     }
-    survey1(tar, a) {    // look up all the children for any of Pod's watched attributes. Add them to elArr.
-        let xs = tar.querySelectorAll('[pText]')
-        let ds = tar.querySelectorAll('[pMod]')
-        let bs = tar.querySelectorAll('[pBind]')
-        this._refs = tar.querySelectorAll('[pRef]')
-        xs.forEach( e => {
-            this._elArr.push( { var: e.getAttribute('pText'), el: e, typ: "T", scp: tar} )
-        }) 
+    survey1(tar, a) {    // look up children for any of Pod's watched attributes. Add them to elArr.
+        let xs = tar.querySelectorAll('[pText]'), ds = tar.querySelectorAll('[pMod]'), bs = tar.querySelectorAll('[pBind]')
+        let rs = tar.querySelectorAll('[pRef]')
+        xs.forEach( e => this._elArr.push( { var: e.getAttribute('pText'), el: e, typ: "T", scp: tar} ) ) 
         ds.forEach( e => {
             let elOb = { var: e.getAttribute('pMod'), el: e, typ: "M", scp: tar }
             this._elArr.push(elOb)
             e.addEventListener('input', () => { 
                 if(a) a[this.dat._key][elOb.var] = e.type ==='checkbox' ? e.checked : e.value
-                this.setVar(e.getAttribute('pMod'), e.type ==='checkbox' ? e.checked : e.value) 
+                this.setVar(elOb.var, e.type ==='checkbox' ? e.checked : e.value) 
             })
         })
         bs.forEach( e => {
             let bnd = e.getAttribute('pBind').split(':')                
             this._elArr.push( { var: bnd[1], el: e, typ: "B", scp: tar, att: bnd[0]} )
         })
-        this._refs.forEach( e => {
-            let rfid = e.getAttribute('pRef')                
-            this.dat[`_${rfid}`] = e
-        })
+        rs.forEach( e => this.dat[`_${e.getAttribute('pRef')}`] = e )
     }
     survey2(el){ // If called, also survey for components and their containers.
-        this._shows = el.querySelectorAll('[pShow]')
-        this._comps = el.querySelectorAll('[pComp]')
-        this._views = el.querySelectorAll('template[compid]')
-        this._shows.forEach( e => {
-            this._elArr.push( { var: e.getAttribute('pShow'), el: e, typ: "N", scp: el, in: false, ky: null, vw: e.querySelector('template') } )
-        })
-        this._comps.forEach( e => {
-            this._elArr.push( { var: e.getAttribute('pComp'), el: e, typ: "C", scp: el, in: false, ky: null} )
-        })
-        this._views.forEach( e => {
-            this._elArr.push( { var: e.getAttribute('compid'), el: e, typ: "V", scp: el} )
-        })         
+        let ss = el.querySelectorAll('[pShow]'), cs = el.querySelectorAll('[pComp]'), vs = el.querySelectorAll('template[compid]')
+        ss.forEach( e => this._elArr.push( { var: e.getAttribute('pShow'), el: e, typ: "N", scp: el, in: false, ky: null, vw: e.querySelector('template') } ) )
+        cs.forEach( e => this._elArr.push( { var: e.getAttribute('pComp'), el: e, typ: "C", scp: el, in: false, ky: null} ) )
+        vs.forEach( e => this._elArr.push( { var: e.getAttribute('compid'), el: e, typ: "V", scp: el} ) )         
     }
     setVar(ky, va, all=true){ // the core method the Proxy leverages, which calls the next
         if(this._cArr.includes(ky)) this.dat._wrap.dataset[ky] = va
@@ -81,11 +66,11 @@ class Pod {
             case "N": va ? this.render(it) : this.nix(it)
                 break
             case "C": this.render(it, true, va)
-                break
+                break      
         }
     }
     render(itl, co=false, vl=null) {  // Clone the compoment from its template and render it
-        let vw, pa
+        let vw
         if(co) {
             this.nix(itl)
             vw = this._elArr.find(m => m.var === vl).el 
@@ -97,13 +82,13 @@ class Pod {
         this.survey1(itl.ky)          // run level 1 survey (for pTexts, pMods, pBinds & pFors) in template
         this.refresh(this._vrObj, false)
     }
-    nix(itl){   // remove the component
-        if( itl.in ) {
+    nix(itl){           // remove the component
+        if(itl.in) {
         this._elArr = this._elArr.filter( mm => mm.scp !== itl.ky )
         itl.ky.remove()
         itl.in = false
         } 
-    }
+    }   
     refresh(oj, s=true) { for( const [ke, vl] of Object.entries(oj) ) this.setVar(ke, vl, s)
     }
 }
