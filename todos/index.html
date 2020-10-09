@@ -25,7 +25,13 @@
             border-radius: 10px;
             border: none;
             padding: 0.5rem;
-            background:#ffedd2
+            background:#e4d39d
+        }
+        input:focus {
+            outline: none;
+        }
+        #newItem {
+            box-shadow: inset 1px 1px 1px rgba(0,0,0,0.7);
         }
         .tditem {
             margin: 0.5rem;
@@ -43,7 +49,7 @@
         button {
             background:#927a55;
             border: none;
-            color: #ffdaa2;
+            color: #e4d39d;
             font-size: large;
             border-radius: 1rem;
         }
@@ -62,13 +68,13 @@
         <h1>Todo List</h1>
 
         <div>
-            <div><input type="text" pMod="lbl1" placeholder="New item">
+            <div><input id="newItem" type="text" pMod="lbl1" placeholder="New item">
                 <button onclick="app.todos.add({note: app.lbl1, done: false})" >add</button>
                 <br><br>
                 
             <div> <template pFor="todos"> 
                 <div class="tditem" data-done="false">
-                    <div><span class="tdNote" pText="todo.note">Item goes here</span></div>
+                    <div><input type=text class="tdNote" pMod="todo.note"></input></div>
                     <div>
                     <input type="checkbox" pMod="todo.done"></input>
                     </div>
@@ -82,17 +88,17 @@
 
     </div>
 
-    <script src="../pod.js"></script>
+    <script src="../pod-t.js"></script>
 
     <script>
 
     const ary = [ 
-        {note: "todo item 1", done: false},
+        {note: "make todo items editable", done: true},
         {note: "todo item 2", done: true},  
-        {note: "todo item 3", done: false} ]
-
+        {note: "enhance layout and colours", done: false} ]
 
     const app = new Pod('page', {todos: ary})
+
 
     </script>
 
