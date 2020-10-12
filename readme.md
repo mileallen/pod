@@ -1,7 +1,7 @@
 
 # About using this
 
-Pod is a class that supplies a number of helper methods to manipulate the DOM, to match the way most JS frameworks do. It is specifically meant for lightweight web pages that you would like to design like an app, in a declarative way, but without the costs of a framework. It's a 'vanilla' Pod, get it? Sorry. 😁 
+[Pod](https://github.com/mileallen/pod) is a class that supplies a number of helper methods to manipulate the DOM, to match the way most JS frameworks do. It is specifically meant for lightweight web pages that you would like to design like an app, in a declarative way, but without the costs of a framework. It's a 'vanilla' Pod, get it? Sorry. 😁 
 
 You can design components inside templates that will be rendered on demand. Elements can have their text content or an attribute bound to a proxy variable, which you declare right in the markup. For `input` and `textarea` elements, the binding is of-course two-way. You might notice that the markup syntax is influenced by frameworks like Vue for a quick learning curve.
 
@@ -13,11 +13,16 @@ A demonstration as a word-linking game app is [here](https://pod.js.org/verba). 
 
 Within a webpage, Pod will look for specific declarations within the scope you assign to it. The scope is set by passing the ID of the parent element ('the wrapper') when declaring. This will represent the 'app' portion of your web page or web app.
 
-`<div id="app" class="">... the rest of your HTML ... </div>`
+`<div id="appW" class="">... the rest of your HTML ... </div>`
 
-In your own JS code assign the Pod class to a convenient name. 
+In your own JS code assign the Pod class to a convenient name. (Include Pod.js before this assignment.) 
 
-`const app = Pod('app')`
+`const app = new Pod('appW')`
+
+If you have an initial set of variables to assign, pass them as properties in an object as the second argument.
+
+`const app = new Pod('appW', {todos: arrayVar, theme: 'dark'} )`
+
 
 ## Survey 1
 
