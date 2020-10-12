@@ -1,13 +1,13 @@
 
 # About using this
 
-[Pod](https://github.com/mileallen/pod) is a class that supplies a number of helper methods to manipulate the DOM, to match the way most JS frameworks do. It is specifically meant for lightweight web pages that you would like to design like an app, in a declarative way, but without the costs of a framework. It's a 'vanilla' Pod, get it? Sorry. 😁 
+[Pod](https://github.com/mileallen/pod/) is a class that supplies a number of helper methods to manipulate the DOM, to match the way most JS frameworks do. It is specifically meant for lightweight web pages that you would like to design like an app, in a declarative way, but without the costs of a framework. It's a 'vanilla' Pod, get it? Sorry. 😁 
 
 You can design components inside templates that will be rendered on demand. Elements can have their text content or an attribute bound to a proxy variable, which you declare right in the markup. For `input` and `textarea` elements, the binding is of-course two-way. You might notice that the markup syntax is influenced by frameworks like Vue for a quick learning curve.
 
-A demonstration as a word-linking game app is [here](https://pod.js.org/verba). It is <25 Kb in all of uncompressed HTML, CSS and JS. And of course, the obligatory [todo app](https://pod.js.org/todos).
+A demonstration as a word-linking game app is [here](https://pod.js.org/verba/). It is <25 Kb in all of uncompressed HTML, CSS and JS. And of course, the obligatory [todo app](https://pod.js.org/todos/).
 
-[![game screenshot](verba/verba.png "A word linking game")](https://pod.js.org/verba)
+[![game screenshot](verba/verba.png "A word linking game")](https://pod.js.org/verba/)
 
 ## How it works
 
