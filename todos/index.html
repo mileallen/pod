@@ -43,7 +43,7 @@
             grid-template-columns: 1fr 10% 10%;
             gap: 0.5rem;
         }
-        .tditem[data-done=true] .tdNote{
+        .doneIT{
             text-decoration: line-through;
         }
         button {
@@ -73,8 +73,8 @@
                 <br><br>
                 
             <div> <template pFor="todos"> 
-                <div class="tditem" data-done="false">
-                    <div><input type=text class="tdNote" pMod="todo.note"></input></div>
+                <div class="tditem">
+                    <div><input type=text pClass="doneIT:todo.done=true" pMod="todo.note"></input></div>
                     <div>
                     <input type="checkbox" pMod="todo.done"></input>
                     </div>
