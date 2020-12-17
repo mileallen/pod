@@ -2,157 +2,123 @@
 argument. If there is a set of intial values to assign, pass that object as the second argument. */
 
 class Pod {
-    constructor(e=null, i=null, w = document.getElementById(e), l=1, ar=null) {
-        this.dat = { _wrap: w, setVar: this.setVar.bind(this) }
-        this.vrObj = {}
-        this.elArr = []
-        this.daArr = Object.keys(w.dataset)
+    constructor(e=null, i=null, w = document.getElementById(e), s=1, ar=null) {
+        this.elArr = [] // an array of all elements with 'watched' Pod attributes
+        this.vrObj = {} // records those key-value pairs, when set
+        this.dat = { _wräp: w, setVar: this.setVar.bind(this) } // object proxied to manipulate those values from outside
+      
+        this.survey(w, i, s, ar)
 
-        /* elArr is an array of all elements with 'watched' Pod attributes. daArr is an array of data- 
-    attributes on the wrapper element, used to set classes on children through StyleSheet rules and 
-    selectors. vrObj records those key-value pairs for quick access. .dat provides the proxy to 
-    manipulate those values from outside. The Pod class returns this proxy.
-    */
-        this.survey1(w, ar)
-        if(l) this.survey2(w)
-        if(i) this.refresh(i)
-
-        return new Proxy(this.dat, {
-            set(t, k, v) {  t.setVar(k,v)    
-                            return true   },
-            get(t, k) { return t[`_${k}`] }
+        return new Proxy( this.dat, {   // The Pod class returns this proxy.
+            set(t, k, v){   
+                t.setVar(k,v)    
+                return true   
+            },
+            get(t, k){ 
+                return t[`_${k}`] 
+            }
         })
     }
-    survey1(tar, a) {    // query tar's children for any watched attributes. Add them to elArr.
-        let [t, m, b, f, r] = ['Text','Mod','Bind','For','Ref'].map( i => tar.querySelectorAll(`[p${i}]`) )
-        t.forEach( e => this.elArr.push( { var: e.getAttribute('pText'), el: e, typ: "T", scp: tar} ) ) 
-        m.forEach( e => {
-            let elOb = { var: e.getAttribute('pMod'), el: e, typ: "M", scp: tar }
-            this.elArr.push(elOb)
-            e.addEventListener('input', () => { 
-                if(a) a[this.dat._key][elOb.var] = e.type ==='checkbox' ? e.checked : e.value
-                this.setVar(elOb.var, e.type ==='checkbox' ? e.checked : e.value) 
-            })
-        })
+    survey(l, o=null, y=0, a=null) {    // query for any watched attributes. Add them to elArr.
+        let [b, f, t, m, c, r, s, p, v] = ['Bind','For','Text','Mod','Class','Ref','Show','Comp','Viewid'].map( i => l.matches(`[p${i}]`) ? [...l.querySelectorAll(`[p${i}]`), l] : l.querySelectorAll(`[p${i}]`) )
         b.forEach( e => {
-            let bnd = e.getAttribute('pBind').split(':')                
-            this.elArr.push( { var: bnd[1], el: e, typ: "B", scp: tar, att: bnd[0]} )
+            let [d,f] = e.getAttribute('pBind').split(':')                
+            this.elArr.push( { var: f, scp: l, act: va => e.setAttribute(d, va)} )
         })
         f.forEach( e => {
-            let elOb = { var: e.getAttribute('pFor'), el: e, typ: "L", scp: tar, in: false} 
-            this.elArr.push(elOb)
-            this.loop(elOb)
+            e.pod = { in: false, forVar: e.getAttribute('pFor') }
+            this.elArr.push({ var: e.pod.forVar, scp: l, act: va => typeof va == 'object' ? this.loop(e, va) : console.error('Invalid value!') } )
+            this.loop(e)
+        })
+        t.forEach( e => this.elArr.push( { var: e.getAttribute('pText'), scp: l, act: va => typeof va == 'string' || typeof va == 'number' ? e.innerHTML = va : console.error('Invalid value!' ) } ) )  
+        m.forEach( e => {
+            let eVr = e.getAttribute('pMod')
+            this.elArr.push( { var: eVr, scp: l, act: va => e.type==='checkbox' ? e.checked = va : e.value = va } )
+            e.addEventListener('input', () => { 
+                if(a) a[this.dat._key][eVr] = e.type ==='checkbox' ? e.checked : e.value
+                this.setVar(eVr, e.type ==='checkbox' ? e.checked : e.value) 
+            })
         })
         r.forEach( e => this.dat[`_${e.getAttribute('pRef')}`] = e )
-    }
-    survey2(el){ // If called, also survey for components and their containers.
-        let [s, c, v] = ['[pShow]','[pComp]','template[compid]'].map( j => el.querySelectorAll(j) )
-        s.forEach( e => this.elArr.push( { var: e.getAttribute('pShow'), el: e, typ: "N", scp: el, in: false, ky: null, vw: e.querySelector('template') } ) )
-        c.forEach( e => this.elArr.push( { var: e.getAttribute('pComp'), el: e, typ: "C", scp: el, in: false, ky: null} ) )
-        v.forEach( e => this.elArr.push( { var: e.getAttribute('compid'), el: e, typ: "V", scp: el} ) )         
-    }
-    setVar(ky, va, all=true){ // the core method the Proxy leverages, which calls the next
-        if(this.daArr.includes(ky)) this.dat._wrap.dataset[ky] = va
-        this.dat[`_${ky}`] = va
-        this.vrObj[ky] = va
-        let w = this.elArr.filter( i => i.var === ky )
-        if( w && all ) w.forEach( w1 => this.update(w1, va) )
-        else if(w) w.forEach( w1 => { if(w1.typ !== "C" && w1.typ !== "N") this.update(w1, va) } )
-    }
-    update(it, va) {
-        switch(it.typ) { // check type of attribute to act on, then update the DOM
-            case "T": it.el.innerHTML = va
-                break
-            case "M": it.el.type==='checkbox' ? it.el.checked = va : it.el.value = va
-                break
-            case "B": it.el.setAttribute(it.att, va)
-                break
-            case "N": va ? this.render(it) : this.nix(it)
-                break
-            case "C": this.render(it, true, va)
-                break
-            case "L": this.loop(it, va)
-                break        
+        c.forEach(e => { 
+            for(const bt of e.getAttribute('pClass').split(',') ) {
+            let [s,q] = bt.trim().split(':'), [v,b] = q.split('='), vl = b === 'true' ? true : b === 'false' ? false : b
+            this.elArr.push( { var: v, scp: l, act: va => e.classList.toggle(s, vl == va)} )
+            }
+        })
+        if(y){       // If called, also survey for components and their containers.
+            s.forEach( e => {
+                e.pod = { in: false, ky: null, vw: e.querySelector('template') }
+                this.elArr.push( { var: e.getAttribute('pShow'), scp: l, typ: 'ex', act: va => typeof va == "boolean" ? this.render(e, va) : console.error('pShow requires a boolean!')  } ) 
+            })
+            p.forEach( e => {
+                e.pod = { in: false, ky: null } 
+                this.elArr.push( { var: e.getAttribute('pComp'), scp: l, typ: 'ex', act: va => this.elArr.some(m => m.var === va) ? this.render(e, va, true) : console.error(`Oops! Invalid pViewid: '%s'`, va) } ) 
+            }) 
+            v.forEach( e => this.elArr.push( { var: e.getAttribute('pViewid'), el: e, scp: l} ) )         
         }
+        if(o) for( const [ke, vl] of Object.entries(o) ) this.setVar(ke, vl, y)   // set initial values if provided
     }
-    render(itl, co=false, vl=null) {  // Clone the compoment from its template and render it
-        let vw
-        if(co) {
-            this.nix(itl)
-            vw = this.elArr.find(m => m.var === vl).el 
-        }
-        else vw = itl.vw
-        let c = vw.content.firstElementChild.cloneNode(true)
-        itl.ky = itl.el.appendChild(c)
-        itl.in = true
-        this.survey1(itl.ky)          // run level 1 survey (for pTexts, pMods, pBinds & pFors) in template
-        this.refresh(this.vrObj, false)
+    setVar(ky, va, all=1){ // the core method the Proxy setter calls
+        this.dat[`_${ky}`] = this.vrObj[ky] = va
+        all ? this.elArr.forEach( i => { if(i.var === ky) i.act(va) } ) : this.elArr.forEach( i => { if(i.typ !== "ex" && i.var === ky) i.act(va) } )
     }
-    nix(itl){           // remove the component
-        if(itl.in) {
-        this.elArr = this.elArr.filter( mm => mm.scp !== itl.ky )
-        itl.ky.remove()
-        itl.in = false
+    render(et, vl=null, co=false) { 
+        if(et.pod.in) {                 // remove the template content
+            this.elArr = this.elArr.filter( mm => mm.scp !== et.pod.ky )
+            et.pod.ky.remove()
         } 
+        if(vl || (co && vl.length) ) {  // Clone the content of template and render it
+            let vw = co ? this.elArr.find(m => m.var === vl).el : et.pod.vw
+            et.pod.ky = this.inject(et, vw)
+            this.survey(et.pod.ky, this.vrObj)    // run level 1 survey (for pText, pMod, pBind, pFor, pClass, pRef) in clone just rendered
+        }
+        et.pod.in = vl ? true : false
     }   
-    refresh(oj, s=true) { for( const [ke, vl] of Object.entries(oj) ) this.setVar(ke, vl, s)
-    }
-    loop(itl, v=[]){       // 4 methods to deal with pFor loops declared in markup
-        let ar = `_${itl.var}`
-        if(itl.in) this[ar].forEach( m => m.wrap.remove() )
+    loop(et, v=[]){       // Methods to deal with pFor loops declared in markup
+        let ar = `_${et.pod.forVar}`, par = et.parentElement
+        if(et.pod.in) this[ar].forEach( m => m.wräp.remove() )
         this[ar] = []
         this.dat[ar] = v                    
-        let par = itl.el.parentElement
         this.dat[ar].add = (ob, l = this[ar].length) => {
-            if (this[ar].length === 0) itl.in = true
-            this.insert(ob, l, itl, par, ar)
-            this.reKey(ar)
+            if (this[ar].length === 0) et.pod.in = true
+            this.itemIn(ob, l, et, par, ar)
+            this[ar].forEach( (j, k) => j.key = k )     // re-key
             this.dat[ar].splice(l, 0, ob)
             }
-        this.dat[ar].del = (i) => {   
-            this[ar][i].wrap.remove()
+        this.dat[ar].del = i => {   
+            this[ar][i].wräp.remove()
             this[ar].splice(i, 1)
-            this.reKey(ar)
-            if( this[ar].length === 0 ) itl.in = false
+            this[ar].forEach( (j, k) => j.key = k )     // re-key
+            if( this[ar].length === 0 ) et.pod.in = false
             this.dat[ar].splice(i, 1)
             }
-        this.dat[ar].set = (i, kk, vv) => {
-            this[ar][i][kk] = vv
-            this.dat[ar][i][kk] = vv
-        }
-        if(v.length) {        // For each item in array...
-            v.forEach( (itm, key) => this.insert(itm, key, itl, par, ar) )
-            itl.in = true
-            this.reKey(ar)
-        }
-        else itl.in =  false
+        this.dat[ar].set = (i, kk, vv) => this[ar][i][kk] = this.dat[ar][i][kk] = vv
+        if(v.length) v.forEach( (itm, key) => this.itemIn(itm, key, et, par, ar) )   // For each item in array...
+        et.pod.in = v.length ? true : false
     }
-    insert(ent, ij, it, pa, aa){  // ... render the template tagged 'pFor'
-        let c = it.el.content.firstElementChild.cloneNode(true)
-        let e = pa.insertBefore(c, pa.children[ij])               
-        this.reformat(e)
-        this[aa].splice(ij, 0, new Pod(null, ent, e, 0, this.dat[aa]) )
+    itemIn(ent, ij, nl, pa, aa){  // ... render the template tagged 'pFor'
+        let l = this.inject(pa, nl, ij)             
+        for ( const [k, v] of [['pText', 0], ['pMod', 0], ['pRef', 0], ['pBind', 1], ['pClass', 1]] ) { 
+            [ l, ...l.querySelectorAll(`[${k}]`)].filter(el => el!==l || el.matches(`[${k}]`) ).forEach( (e,ky,ar,th, s,q,d,pt="") => {
+            for( let i=0, bt = e.getAttribute(k).split(','); i < bt.length ; [s,q] = bt[i].trim().split('.'), [d,] = s.split(':'), pt = `${pt}, ${d}:${q}`, i++ );
+            v ? e.setAttribute(k, pt.slice(2)) : e.setAttribute(k, q)
+            }) 
+        }          
+        this[aa].splice(ij, 0, new Pod(null, {...ent, key: ij }, l, 0, this.dat[aa]) )
     }
-    reKey(av){          // update the key for each item
-        this[av].forEach( (j, k) => j.key = k )
-    }
-    reformat(cln) {     // match the attribute syntax for Pod
-        let [t, m, b] = ['Text', 'Mod','Bind'].map( m => cln.querySelectorAll(`[p${m}]`) )
-        for ( const [k, v] of [[t,'pText'], [m,'pMod']] ) k.forEach( el => {
-            let st = el.getAttribute(v).split('.')
-            el.setAttribute(v, st[1] )
-        } )
-        b.forEach( el => {
-            let st = el.getAttribute('pBind').split(':'), bnd = st[1].split('.')                
-            el.setAttribute('pBind', `${st[0]}:${bnd[1]}`)
-        } )
+    inject(pa, g, i=0){
+        let c = g.content.firstElementChild.cloneNode(true)
+        return pa.insertBefore(c, pa.children[i])
     }
 }
 
 
+
+
 /* 
-sample helper for smoother transitions between views. Call dot(app, pRef var, pShow var / compid var)
-pRef var is assigned to the template's parent div.
+sample helper for smoother transitions between views. Call dot(app, pRef var, pShow / pComp var, [compid var])
+pRef is assigned same el as pComp template's parent div.
 */
 
 function dot(cls, el, vr, on=true, d=10) {  
@@ -172,6 +138,3 @@ function dot(cls, el, vr, on=true, d=10) {
         }, 600)
     }
 }
-
-
-
