@@ -14,12 +14,13 @@ const initVr = {
 
   stage: 0,
   matchFound: false,
-  noResults: false,
-  qWords: []
+  qWords: [],
+  resview: "apisent",
 }
 
-const wrdy = new Pod('verba', initVr)
-wrdy.showExplain = true
+
+const wrdy = new Pod('verba', {...initVr, showExplain: true })
+
 
 
 function getStatus(response) {
@@ -54,12 +55,11 @@ async function getList(rel, verbum) {
   wrdy.results.style.opacity = 1
 
   if (wSize === 0) {
-    if (!wrdy.noResults) wrdy.noResults = true
+    wrdy.resview = "oops"
     wrdy.dialogue.innerText = "Sorry, found no words!"
-    wrdy.fetching = false
   } 
   else {
-    wrdy.noResults = false
+    wrdy.resview = "apisent"
     switch (wrdy.stage) {
       case 3:
         wrdy.qWords.forEach((item, ky) => {
@@ -72,7 +72,7 @@ async function getList(rel, verbum) {
         if (wrdy.matchFound === false) wrdy.dialogue.innerText = "Nope, there is a different chain!"
       break
       default:
-        wrdy.dialogue.innerText = (wSize > 1 ? "There. Found these " + wSize + " words." : "There. Found this " + wSize + " word.")
+        wrdy.dialogue.innerText = wSize > 1 ? `There. Found these ${wSize} words.` : `There. Found this ${wSize} word.`
       break
     }
   }
@@ -89,7 +89,7 @@ function pickword(choice) {
 
 
 function setLevel(){
-  wrdy.level === '1' ? wrdy.level = '2' : wrdy.level = '1'
+  wrdy.level = wrdy.level === '1' ? '2' : '1'
   let ix = Math.floor(Math.random() * 10)
   wrdy.wordA = wordPairs[`level${wrdy.level}`][ix].word1
   wrdy.wordB = wordPairs[`level${wrdy.level}`][ix].word2

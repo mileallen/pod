@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#be1818">
     <title>verba nex | make a chain of words</title>
     <meta name="description" content="A game to link a given pair of words in 4 hops and 4 kinds of relations.">
-    
+    <link rel="icon" type="image/png" href="./favicon.png">
     <link rel="stylesheet" href="./game.css">
 
 </head>
@@ -15,7 +15,7 @@
 
 <body>
 
-<div id="verba" class="main" data-level-picked="false" data-fetching="false" data-stage=0 data-picked1="false" data-picked2="false" data-picked3="false" data-match-found="false" data-no-results="false">
+<div id="verba" class="main">
 
 <header><div class="title">verba nex</div>
     <div class="relationKey"><span style="--colour: var(--clr_rhy)">Rhyme </span><span style="--colour: var(--clr_syn)">Synonym </span><span style="--colour: var(--clr_jjb)">Adjective </span><span style="--colour: var(--clr_cns)">Consonants</span> </div>
@@ -34,7 +34,7 @@
            <div class="topPanel">
           <div class="appTalk" pRef="dialogue">To start, pick a level - click 'L'</div>
           
-          <div id="levelBut" class="topBut" onclick="setLevel()" pText="level"></div>
+          <div id="levelBut" class="topBut" pClass="disab:levelPicked=true" onclick="setLevel()" pText="level"></div>
 
 
             <div class="topBut" onclick="resetAll()">&#x1f5d8;
@@ -44,7 +44,7 @@
 
             <div class="botPanel">
                 <div class="progContain">
-                <div class="progInd"></div>
+                <div class="progInd" pClass="prog1:fetching=true, prog0:fetching=false"></div>
                 </div>
             </div>
             
@@ -52,7 +52,7 @@
             <div class="grid g1">
                 <div class="wordEnd" pText="wordA"></div>
 
-                <div id="opts0">
+                <div id="opts0" class="disab" pClass="enab:stage=0">
                     <div class="sqar sqar1" onclick="getList('rhy', wrdy.wordA)" title="Rhymes with"></div>
                     <div class="sqar sqar2" onclick="getList('syn', wrdy.wordA)" title="Synonyms"></div>
                     <div class="sqar sqar3" onclick="getList('jjb', wrdy.wordA)" title="Adjectives"></div>
@@ -60,11 +60,11 @@
                 </div>
 
                 <div>
-                <div id="mid1" pText="link1" class="wordMid"></div>
-                <div id="redo1" class="redoBut" onclick="goBack(0)">&#x21ba;</div>
+                <div id="mid1" pText="link1" class="wordMid" pClass="wPicked1:picked1=true, wPicked0:picked1=false"></div>
+                <div id="redo1" class="redoBut disab" pClass="enab:picked1=true, enab:stage=1" onclick="goBack(0)">&#x21ba;</div>
                 </div>
 
-                <div id="opts1">
+                <div id="opts1" class="disab" pClass="enab:stage=1">
                     <div class="sqar sqar1" onclick="getList('rhy', wrdy.link1)" title="Rhymes with"></div>
                     <div class="sqar sqar2" onclick="getList('syn', wrdy.link1)" title="Synonyms"></div>
                     <div class="sqar sqar3" onclick="getList('jjb', wrdy.link1)" title="Adjectives"></div>
@@ -72,12 +72,12 @@
                 </div>
 
                 <div>
-                <div id="mid2" pText="link2" class="wordMid"></div>
-                <div id="redo2" class="redoBut" onclick="goBack(1)">&#x21ba;</div>
+                <div id="mid2" pText="link2" class="wordMid" pClass="wPicked1:picked2=true, wPicked0:picked2=false"></div>
+                <div id="redo2" class="redoBut disab" pClass="enab:picked2=true, enab:stage=2"  onclick="goBack(1)">&#x21ba;</div>
                 </div>
 
 
-                <div id="opts2">
+                <div id="opts2" class="disab" pClass="enab:stage=2">
                     <div class="sqar sqar1" onclick="getList('rhy', wrdy.link2)" title="Rhymes with"></div>
                     <div class="sqar sqar2" onclick="getList('syn', wrdy.link2)" title="Synonyms"></div>
                     <div class="sqar sqar3" onclick="getList('jjb', wrdy.link2)" title="Adjectives"></div>
@@ -85,40 +85,36 @@
                 </div>
 
                 <div>
-                <div id="mid3" pText="link3" class="wordMid"></div>
-                <div id="redo3" class="redoBut" onclick="goBack(2)">&#x21ba;</div>
+                <div id="mid3" pText="link3" class="wordMid" pClass="wPicked1:picked3=true, wPicked0:picked3=false"></div>
+                <div id="redo3" class="redoBut disab" pClass="enab:picked3=true, enab:stage=3"  onclick="goBack(2)">&#x21ba;</div>
                 </div>
 
-                <div  id="opts3">
+                <div  id="opts3" class="disab" pClass="enab:stage=3">
                     <div class="sqar sqar1" onclick="getList('rhy', wrdy.link3)" title="Rhymes with"></div>
                     <div class="sqar sqar2" onclick="getList('syn', wrdy.link3)" title="Synonyms"></div>
                     <div class="sqar sqar3" onclick="getList('jjb', wrdy.link3)" title="Adjectives"></div>
                     <div class="sqar sqar4" onclick="getList('cns', wrdy.link3)" title="Consonants"></div>
                 </div>
 
-                <div id="targetWord" class="wordEnd" pText="wordB"></div>
+                <div id="targetWord" class="wordEnd" pClass="matched:matchFound=true" pText="wordB"></div>
                 
 
             </div>
 
             
-            <div class="g2"> <div class="resBox" pRef="results">
-
-                <div pShow="noResults">
-                    <template><div class="oops">!!!</div></template>
-                </div>
-
-                <div class="grid2">
-                    <template pFor="qWords"><div class="fetched" data-pick="false" data-kick="false" data-matched="false">
-                        <div class="" pText="qWord.word" pBind="idx:qWord.word" onclick="pickword(this.getAttribute('idx'))"> </div>
-                    </div> </template>
-                </div>
-
+            <div class="g2"> <div class="resBox" pRef="results" pComp="resview">
 
             </div></div>
 
+            <template pViewid="oops"><div class="oops">!!!</div></template>
 
-
+            <template pViewid="apisent">
+                <div class="grid2" pClass="noClick:stage=3">
+                    <template pFor="qWords"><div class="fetched" pClass="matched:qWord.matched=true, picked:qWord.pick=true, kicked:qWord.kick=true">
+                        <div class="" pText="qWord.word" pBind="idx:qWord.word" onclick="pickword(this.getAttribute('idx'))"> </div>
+                    </div> </template>
+                </div>
+            </template>
 
 
         <div class="foot" style="flex: initial; align-self: flex-end; width:100%; padding-top: 2rem;">

@@ -402,63 +402,61 @@ a:link {
 }
 
 
-/* Rules coordinated with data variables */
+/* Classes switched with pClass */
 
-
-.main[data-level-picked=true] #levelBut, 
-.main:not([data-stage='0']) #opts0, 
-.main:not([data-stage='1']) #opts1, 
-.main:not([data-stage='2']) #opts2, 
-.main:not([data-stage='3']) #opts3, 
-.main:not([data-picked1=true]) #redo1, .main:not([data-stage='1']) #redo1, 
-.main:not([data-picked2=true]) #redo2, .main:not([data-stage='2']) #redo2, 
-.main:not([data-picked3=true]) #redo3, .main:not([data-stage='3']) #redo3 {
+.disab {
     pointer-events: none;
     filter: grayscale(1);
     opacity: 0.5;
 }
 
-.main[data-stage='3'] .fetched {
+.enab {
+  pointer-events: all;
+  filter: none;
+  opacity: 1.0;
+}
+
+.noClick {
     pointer-events: none;
 }
 
-.main[data-fetching=true] .progInd {
+.prog1 {
     animation: progress 3s ease-in-out forwards;
     -webkit-animation: progress 3s ease-in-out forwards;
 }
 
-.main[data-fetching=false] .progInd {
+.prog0 {
     width:0; 
 }
 
-.main[data-picked1=true] #mid1, .main[data-picked2=true] #mid2, .main[data-picked3=true] #mid3 {
+.wPicked1 {
     border-top: 2px solid #907030;
     border-bottom: 2px solid #907030;
     background: #ffffff;
 }
 
-.main[data-picked1=false] #mid1, .main[data-picked2=false] #mid2, .main[data-picked3=false] #mid3 {
+.wPicked0 {
     box-shadow: inset 1px 1px 1px rgba(0,0,0,0.7);
 }
 
-.main[data-match-found=true] #targetWord, .fetched[data-matched=true] {
+.matched {
     border: 3px solid #be0000;
     color: #be0000;
     border-radius: 5px;
 }
 
-.main[data-no-results=true] .grid2 {
+.hidd {
   display: none;
 }
 
-.fetched[data-pick=true] {
+.picked {
     -webkit-animation: exitLeft 0.7s forwards;
     animation: exitLeft 0.7s forwards;
     color: #0d6833;
     pointer-events: none;
 }
 
-.fetched[data-kick=true] {
+.kicked {
     -webkit-animation: exitRight 0.6s forwards;
     animation: exitRight 0.6s forwards;
     pointer-events: none;
