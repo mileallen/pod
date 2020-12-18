@@ -40,7 +40,7 @@ class Pod {
             })
         })
         r.forEach( e => this.dat[`_${e.getAttribute('pRef')}`] = e )
-        c.forEach(e => { 
+        c.forEach( e => { 
             for(const bt of e.getAttribute('pClass').split(',') ) {
             let [s,q] = bt.trim().split(':'), [v,b] = q.split('='), vl = b === 'true' ? true : b === 'false' ? false : b
             this.elArr.push( { var: v, scp: l, act: va => e.classList.toggle(s, vl == va)} )
@@ -61,7 +61,7 @@ class Pod {
     }
     setVar(ky, va, all=1){ // the core method the Proxy setter calls
         this.dat[`_${ky}`] = this.vrObj[ky] = va
-        all ? this.elArr.forEach( i => { if(i.var === ky) i.act(va) } ) : this.elArr.forEach( i => { if(i.typ !== "ex" && i.var === ky) i.act(va) } )
+        all ? this.elArr.forEach( i => i.var === ky && i.act(va) ) : this.elArr.forEach( i => i.var === ky && i.typ !== "ex" && i.act(va) )    
     }
     render(et, vl=null, co=false) { 
         if(et.pod.in) {                 // remove the template content

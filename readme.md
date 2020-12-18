@@ -74,6 +74,8 @@ The corresponding `pClass` attribute is slightly different in that it supports m
 
 Notice above the `input` element bound to the variable `themeChoice` with `pMod`. Say you want that to reflect in a CSS class assigned to some other part of the app, such that the range `input` can be used to switch that class. 
 
+The syntax is: `pClass="yourClassName:yourVariable=value`, no space after `:`.
+
 ```
 <div id="themedComponent" pClass="darkTheme:themeChoice=dark, lightTheme:themeChoice=light, noPointer:gameOver=true">
 <p>   <span>...</span></p>
@@ -81,7 +83,9 @@ Notice above the `input` element bound to the variable `themeChoice` with `pMod`
 </div>
 ```
 
-Now when the range input is used to set `themeChoice`, the CSS rule takes effect on the `themedComponent` element.
+Now when the range input is used to set `themeChoice`, the CSS rule takes effect on the `themedComponent` element. Or you could set it as usual:
+
+`app.themeChoice = 'dark'`
 
 
 ### pFor
