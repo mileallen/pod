@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#be1818">
+    <title>Learn Hanzi charachters</title>
+
+    <link rel="shortcut icon" href="./favicon.png" type="image/png">
+    <link rel="stylesheet" href="./other.css">
+
+</head>
+
+
+<body>
+
+    <div class="main" id="wrap">
+        <div>
+
+            <div class="containCent"><span class="name" pRef="title">汉字游戏</span>
+                <span class="descrip">Learn and memorize Hanzi characters, or whatever else!</span>
+            </div>
+
+
+        </div>
+
+        <div class="gamearea">
+
+            <div class="butts butL" pClass="noClick:pageVar=gameOver" onclick="transs('pageRef', 0, 'tog')">Edit Tiles</div>
+
+            <div class="butts butR" pClass="redBG:pageVar=editChar" onclick="resetGame()">Reset Game</div>
+
+            <div pComp="pageVar" class="gamePanel editOp" pRef="pageRef">
+
+                <template pViewid="home">
+
+                    <div>
+
+                        <div class="score"> Moves: <span pText="totMoves"></span></div>
+
+                        <div class="grid">
+
+                            <template pFor="tiles">
+
+                                <div class="tile" pClass="flipped:tile.flipped=true, matched:tile.matched=true, charClas:tile.char=true">
+                                    <button class="front" pBind="idx:tile.key"
+                                        onclick="afterFlip(this.getAttribute('idx'))">
+                                        ☆
+                                    </button>
+                                    <div class="back" pText="tile.content"></div>
+                                </div>
+
+
+                            </template>
+                        </div>
+
+                    </div>
+
+                </template>
+            </div>
+
+            <template pViewid="editChar">
+
+                <div class="editCharSize">
+
+                    <div class="editA"><span style="font-size: 1.5rem; color: rgba(250, 250, 250, 0.3);">Tiles</span>
+
+                        <div class="editGrid">
+                            <template pFor="kanjis">
+                                <div><input size="17" class="inputMarg" type="text" pMod="kanji.char" onchange="hnz.testChar=kanjis[0].char"/></div>
+                            </template></div>
+
+                    </div>
+                    <div class="editB"><span style="font-size: 1.5rem; color: rgba(250, 250, 250, 0.3);">Match with</span>
+
+                    <div class="editGrid">
+                        <template pFor="words">
+                            <div><input size="17" class="inputMarg" type="text" pMod="word.mean" onchange="hnz.testMean=words[0].mean"/></div>
+                        </template></div>
+
+                    </div>
+
+                    <div class="editHead2">Size on Tile</div>
+
+                    <div class="ei1">
+                        <span id="sc1" class="editIcon" pClass="noClick:cTile=max" onclick="size('c', false)">&#x1f5da; </span>
+                        <span id="sc0" class="editIcon" pClass="noClick:cTile=min"  onclick="size('c')"> &#x1f5db;</span></div>
+
+                    <div class="ei2">
+                        <span id="sm1" class="editIcon" pClass="noClick:mTile=max"  onclick="size('m', false)">&#x1f5da; </span>
+                        <span id="sm0" class="editIcon" pClass="noClick:mTile=min"  onclick="size('m')"> &#x1f5db;</span></div>
+
+                    <div class="edTile et1" pText="testChar"></div>
+                    <div class="edTile et2" pText="testMean"></div>
+
+                </div>
+
+            </template>
+
+            <template pViewid="gameOver">
+                <div class="wellDone" pRef="endGame">
+                    <p style="color:rgba(202, 202, 202, 0.3); font-size: 3rem;">Well <br> done!</p>
+                </div>
+            </template>
+
+            <div class="copy" style="flex: initial; align-self: flex-end; width:100%; padding-top: 1rem;">
+
+                <p style="font-size: 0.9rem; color: rgba(250, 250, 250, 0.3); line-height: 1rem; margin-left: auto; margin-right: auto; width:80%; text-align: center;">
+                    © 2020 <a href="https://twitter.com/sachwry">Sach Wry</a> <br />
+                    Mandarin font from <a href="http://www.onlinewebfonts.com">oNline Web Fonts</a> CC BY</p>
+            </div>
+
+        </div>
+
+        <div>
+            <div class="containCent"><span class="name2">Objective</span>
+                <p class="descrip2">Could not be simpler. It's like one of those Pelmanism card games - Concentration,
+                    <i>Pexeso</i>, 神経衰弱, Match-up or <a
+                        href="https://en.wikipedia.org/wiki/Concentration_(tile_game)">whatever</a> you call it. Just
+                    find matching pairs.</p>
+                <p class="descrip2">Note: tiles are matched in pairs, in sequence => [1st to 2nd], [3rd to 4th]... and
+                    so on. Say you flip one, X, then a second, Y, if they don't match they flip right back. That's one
+                    'move', which implies that the pairing stars anew. If you think the next tile you then flip, Z,
+                    matches the second you just saw,, Y, you need to flip that tile, Y, next.</p>
+                <p class="descrip2">Use the 'Edit' button to change the characters when done with this set. Or, of
+                    course, you can use the game to help memorise words in a different language, or indeed, anything
+                    else you might use flashcards for. Kids can pair emojis with second-language words. Endless
+                    possiblities!</p>
+            </div>
+        </div>
+
+    </div>
+
+
+    </div>
+
+    <script src="../pod.js"></script>
+
+    <script src="./code.js"></script>
+
+
+</body>
+
+</html>
