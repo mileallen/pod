@@ -5,7 +5,7 @@
 
 You can design simple 'components' inside templates that will be rendered on demand. Elements can have their text content or an attribute bound to a proxy variable, which you declare right in the markup. For `input` and `textarea` elements, the binding is of-course two-way. You might notice that the markup syntax is influenced by popular frameworks for a quick learning curve.
 
-A demonstration as a word-linking game app is [here](https://pod.js.org/verba/). It is <25 KB in all of uncompressed HTML, CSS and JS (Transfer size ~9 KB.). And of course, the obligatory [todo app](https://pod.js.org/todos/).
+A demonstration as a word-linking game app is [here](https://pod.js.org/verba/). It is <25 KB in all of uncompressed HTML, CSS and JS (Transfer size ~9 KB.). Then [Hanzi](https://pod.js.org/hanzi/) is a pelmanist game for Mandarin characters. And of course, the obligatory [todo app](https://pod.js.org/todos/).
 
 [![game screenshot](verba/verba.png "A word linking game")](https://pod.js.org/verba/)
 
@@ -15,7 +15,7 @@ Within a webpage, Pod will look for specific declarations within the scope you a
 
 `<div id="appW" class="">... the rest of your HTML ... </div>`
 
-In your own JS code assign the Pod class to a convenient name. (Include Pod.js before this assignment.) 
+In your own JS code assign an instance of the Pod class to a convenient name. (Include Pod.js before this assignment.) 
 
 `const app = new Pod('appW')`
 
@@ -26,11 +26,11 @@ If you have an initial set of variables to assign, pass them as properties in an
 
 ## Survey level 1
 
-When initialised thus, the class surveys the children of the wrapper for a number of attributes: 'Survey' looks for `pText`, `pMod`, `pBind`, `pFor`, `pClass` and `pRef`.
+When initialised thus, the class surveys the children of the wrapper for a number of attributes: the `Survey` method looks for `pText`, `pMod`, `pBind`, `pFor`, `pClass` and `pRef`.
 
 ### pText
 
-This attribute names a variable that will correspond to innerHTML for the element.
+In your markup, this attribute names a variable that will correspond to innerHTML for the element.
 
 `<span pText="textVar1"> Original text here is boring.</span>`
 
