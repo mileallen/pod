@@ -5,7 +5,7 @@
 
 You can design simple 'components' inside templates that will be rendered on demand. Elements can have their text content or an attribute bound to a proxy variable, which you declare right in the markup. For `input` and `textarea` elements, the binding is of-course two-way. You might notice that the markup syntax is influenced by popular frameworks for a quick learning curve.
 
-A demonstration as a word-linking game app is [here](https://pod.js.org/verba/). It is <25 KB in all of uncompressed HTML, CSS and JS (Transfer size ~9 KB.). Then [Hanzi](https://pod.js.org/hanzi/) is a pelmanist game for Mandarin characters. And of course, the obligatory [todo app](https://pod.js.org/todos/).
+A demonstration as a word-linking game app is [here](https://pod.js.org/verba/). It is <25 KB in all of uncompressed HTML, CSS and JS (Transfer size ~9 KB.). Then [Hanzi](https://pod.js.org/hanzi/) is a pelmanist game for Mandarin characters. And of course, the obligatory [todo app](https://pod.js.org/todos/). Tested only on Chrome/Edge I'm afraid.
 
 [![game screenshot](verba/verba.png "A word linking game")](https://pod.js.org/verba/)
 
