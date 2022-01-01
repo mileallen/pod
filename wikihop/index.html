@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#be1818">
+    <title>wiki hop</title>
+    <meta name="description" content="Get from one Wikipedia article to another in the fewest hops!">
+    <link rel="icon" type="image/png" href="">
+    <link rel="stylesheet" href="./game.css">
+
+</head>
+
+
+<body>
+
+<div id="wikip" class="main">
+
+<header> 
+        <div>
+        <div class="title" style="line-height: 0.9;">wiki</div>
+        <div><img class="wlogo" src="./wiki-logo.png"></div>
+        <div class="title" style="line-height: 0.3;">hop</div>
+        </div>
+        <div style="padding-top: 5vmin;"> 
+            Get from one Wikipedia article to another in the fewest hops!
+        </div>
+        <div style="font-size: 0.7em">Wikipedia logo under CC-BY-SA.
+        </div>
+
+</header>
+
+<div class="gamearea">
+
+    <div class="menu-pg"> 
+        <div class="menu-blk"></div>
+        <div id="just-for-placement"></div>
+    </div>
+
+    <div class="topPanel">
+    
+        <div class="menu-trig">
+  
+                <input type="checkbox" id="openmenu" class="hid-check" onchange="seeMenu(0, this.checked)">
+
+                <div class="icon">
+
+                <label for="openmenu" id="icon-label">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </label>    
+                </div>
+
+      </div>
+
+      <div class="progContain">
+        <div id="indict" class="progInd"></div>
+      </div>
+    
+    </div>
+
+   
+
+    <div class="grid">
+        
+        <div>
+        <div id="fromArt" class="artTitle" pText="wordA">Confucius</div>
+        <div id="lnk0" class="buts linkBut" onclick="checklink(0)">&#10968;&#10968;</div>
+        </div>
+
+
+        <div>
+            <input id="inputArt-1" class="mid inps" onchange="enabl(0); enabl(1);"></input>
+            <div id="lnk1" class="buts linkBut" onclick="checklink(1)">&#10968;&#10968;</div>
+        </div>
+
+        <div class="hop" style="display: none">
+            <input id="inputArt-2" class="mid inps"  onchange="enabl(1); enabl(2);"></input>
+            <div id="lnk2" class="buts linkBut" onclick="checklink(2)">&#10968;&#10968;</div>
+        </div>
+
+        <div class="hop" style="display: none">
+            <input id="inputArt-3" class="mid inps"  onchange="enabl(2); enabl(3);"></input>
+            <div id="lnk3" class="buts linkBut" onclick="checklink(3)">&#10968;&#10968;</div>
+        </div>
+
+        <div class="hop" style="display: none">
+            <input id="inputArt-4" class="mid inps"  onchange="enabl(3); enabl(4);"></input>
+            <div id="lnk4" class="buts linkBut" onclick="checklink(4)">&#10968;&#10968;</div>
+        </div>
+
+        <div class="hop" style="display: none">
+            <input id="inputArt-5" class="mid inps"  onchange="enabl(4); enabl(5);"></input>
+            <div id="lnk5" class="buts linkBut" onclick="checklink(5)">&#10968;&#10968;</div>
+        </div>
+
+        <div class="hop" style="display: none">
+            <input id="inputArt-6" class="mid inps"  onchange="enabl(5); enabl(6);"></input>
+            <div id="lnk6" class="buts linkBut" onclick="checklink(6)">&#10968;&#10968;</div>
+        </div>
+
+
+        <div>
+        <div id="toArt" class="artTitle" pClass="matched:matchFound=true" pText="wordB">Juliette Binoche</div>
+        <div id="" class="buts linkBut" style="visibility: hidden;">&#10968;&#10968;</div>
+        </div>
+
+    </div>
+
+
+    <div class="foot" style="flex: initial; align-self: flex-end; width:100%;">
+
+        <p style="font-size: 0.9rem; line-height: 1rem; margin-left: auto; margin-right: auto; width:80%; text-align: center;">
+            &copy; 2022 <a href="https://twitter.com/sachwry">Sach Wry</a></p>
+    </div>
+            
+</div>
+
+<footer>
+
+    <h3> Objective </h3>
+
+    <p>Is there a single thing that directly connects Confucius to Juliette Binoche? Who knows?! 
+    But there is a route from Alexander the Great to Pink Floyd through just 3 other things 
+    ( 4 links between them ). Depends on how much you know about all the uses humans make of horses.</p>
+
+    <p>Pick a challenge from the menu and let your imagination and lateral thinking wander.</p>
+
+    <p>Clik the button with the link icon between two phrases to ask the internet if the Wikipedia 
+    article for the thing on the top has a direct link to one at the bottom. The answer, which might take 
+    2-3 seconds, is indicated by a green tick or a red cross. If you type in another word, the button 
+    is reset again.</p>
+
+    <p>Happy hopping!</p>
+    
+</footer>
+
+
+        
+
+
+<template id="menu-page-0">
+    <div class="menu-blk">
+        <div class="menuopt" onclick="fillNav('1')">Pick topics</div>
+        <div class="menuopt" onclick="fillNav('2')">Change hops</div>
+        <div class="menuopt" onclick="reveal()" onmouseover="this.innerText='Sure?'" onmouseout="this.innerText='I give up!'">I give up!</div>
+        <div class="menuopt" onclick="resetAll()">Reset All</div>
+    </div>
+</template>
+
+<template id="menu-page-1">
+    <div class="menu-blk" style="font-size: 0.8em;">
+    <div class="menuopt picks" onclick="picked(0)">Link 1</div>
+    <div class="menuopt picks" onclick="picked(1)">Link 2</div>
+    <div class="menuopt picks" onclick="picked(2)">Link 3</div>
+    <div class="menuopt picks" onclick="picked(3)">Link 4</div>
+    <div class="menuopt picks" onclick="picked(4)">Link 5</div>
+    </div>
+</template>
+
+<template id="menu-page-2">
+    <div class="menu-blk">
+        <input style="font-size: 2rem; width: 2.5em" id="hopNum" class="inps" type="number" value="2" min="2" max="7" onchange="numHop(this.value)"></input>
+        <span>hops</span>
+    </div>
+</template>
+
+<template id="menu-page-3">
+    <div class="menu-blk">
+        <div style="font-size: 2rem;">You did it!</div>
+    </div>
+</template>
+
+
+<script async type="text/javascript" src="./logic.js"></script>
+
+
+</body>
+
+</html>
