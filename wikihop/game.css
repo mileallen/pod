@@ -98,6 +98,7 @@ margin-right: 5px;
 footer, header {
     color: #ffffff75;
     font-size: 0.8rem;
+    padding-bottom: 1.5rem;	
 }
 
 footer > * {
