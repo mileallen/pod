@@ -4,10 +4,11 @@ const chatBox = document.getElementById('chat-box');
 const messageField = document.getElementById('message-field');
 const sendBtn = document.getElementById('send-btn');
 
+let connections = {};
+
 function initRoom(){
 
     const peer = new Peer('panchatantraAparatchik');
-    let connections = {};
     // Track connections by Peer ID
 
     peer.on('open', (id) => {
