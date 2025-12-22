@@ -1,0 +1,100 @@
+* {
+    box-sizing: border-box;
+    font-family: -apple-system, sans-serif;
+}
+
+body {
+    background: #f0f2f5;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+header {
+    padding: 15px;
+    background: #007bff;
+    color: white;
+    text-align: center;
+}
+
+.status {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+.setup-box {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    background: #fafafa;
+}
+
+.input-group {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background: #ccc;
+}
+
+.chat-box {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.msg {
+    padding: 8px 12px;
+    border-radius: 15px;
+    max-width: 80%;
+    font-size: 0.95rem;
+}
+
+.msg.self {
+    align-self: flex-end;
+    background: #007bff;
+    color: white;
+}
+
+.msg.peer {
+    align-self: flex-start;
+    background: #e9ebee;
+    color: #333;
+}
+
+.message-input {
+    padding: 15px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px;
+}

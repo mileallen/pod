@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peer Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script> <!-- or @1.5.2 -->
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h2>Peer Chat</h2>
+            <div id="status" class="status">Connecting to server...</div>
+        </header>
+
+        <div class="setup-box">
+            <p>Your ID: <strong id="my-id">...</strong></p>
+            <div class="input-group">
+                <input type="text" id="peer-id-input" placeholder="Friend's ID">
+                <button id="init-btn" onclick="initRoom()">Initiate</button>
+                <button id="connect-btn" onclick="joinRoom()">Join</button>
+            </div>
+        </div>
+
+        <div id="chat-box" class="chat-box">
+            </div>
+
+        <div class="message-input">
+            <input type="text" id="message-field" placeholder="Type a message..." disabled>
+            <button id="send-btn" disabled>Send</button>
+        </div>
+    </div>
+    <script src="room-chat.js"></script>
+</body>
+</html>
