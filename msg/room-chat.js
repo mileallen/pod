@@ -4,12 +4,12 @@ const chatBox = document.getElementById('chat-box');
 const messageField = document.getElementById('message-field');
 const sendBtn = document.getElementById('send-btn');
 
+let peer
 let connections = {};
 
 function initRoom(){
 
-    const peer = new Peer('panchatantraAparatchik');
-    // Track connections by Peer ID
+    peer = new Peer('panchatantraAparatchik');
 
     peer.on('open', (id) => {
         myIdDisplay.innerText = id;
@@ -36,14 +36,12 @@ function initRoom(){
 
 function joinRoom() {
 
-    const peer = new Peer();
-    let connections = {};
-    // Track connections by Peer ID
+    peer = new Peer();
 
     peer.on('open', (id) => {
         myIdDisplay.innerText = id;
 
-        connectToPeer(peer, 'panchatantraAparatchik');
+        connectToPeer('panchatantraAparatchik');
 
         messageField.disabled = false;
         sendBtn.disabled = false;
@@ -51,7 +49,7 @@ function joinRoom() {
     );
     // Handle incoming connections
     peer.on('connection', (conn) => {
-        setupConnection(peer, conn);
+        setupConnection(conn);
     }
     );
 
@@ -61,12 +59,12 @@ function joinRoom() {
     );
 }
 
-function connectToPeer(pr, targetId) {
-    const conn = pr.connect(targetId);
-    setupConnection(pr, conn);
+function connectToPeer(targetId) {
+    const conn = peer.connect(targetId);
+    setupConnection(conn);
 }
 
-function setupConnection(pr, conn) {
+function setupConnection(conn) {
     if (connections[conn.peer])
         return;
     // Avoid duplicates
@@ -80,7 +78,7 @@ function setupConnection(pr, conn) {
             if (data.type === 'peer-list') {
                 data.peers.forEach(pId => {
                     if (pId !== peer.id)
-                        connectToPeer(pr, pId);
+                        connectToPeer(pId);
                 }
                 );
             } else {
@@ -129,6 +127,7 @@ function addMessage(text, type) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-window.addEventListener('beforeunload', () => {// peer.destroy();
+window.addEventListener('beforeunload', () => {
+    peer.destroy();
 }
 );
