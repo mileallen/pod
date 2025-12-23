@@ -24,7 +24,7 @@ function initRoom() {
     );
     // Handle incoming connections
     peer.on('connection', (conn) => {
-        setupConnection(peer, conn);
+        setupConnection(conn);
     }
     );
 
@@ -41,7 +41,7 @@ function joinRoom() {
     peer.on('open', (id) => {
         myIdDisplay.innerText = id;
 
-        connectToPeer('panchatantraAparatchik');
+        peer.connect('panchatantraAparatchik'); //connectToPeer
 
         messageField.disabled = false;
         sendBtn.disabled = false;
@@ -69,6 +69,21 @@ function setupConnection(conn) {
         return;
     // Avoid duplicates
 
+    conn.on('data', (data) => {
+            console.log('got data!');
+            // Handle Mesh: If we receive a list of other peers, connect to them too
+            if (data.type === 'peer-list') {
+                data.peers.forEach(pId => {
+                    if (pId !== peer.id)
+                        connectToPeer(pId);
+                }
+                );
+            } else {
+                addMessage(`${conn.peer.substring(0, 4)}: ${data}`, 'peer');
+            }
+        }
+        );
+
     conn.on('open', () => {
         connections[conn.peer] = conn;
         addMessage(`System: ${conn.peer.substring(0, 5)} joined.`, 'system');
@@ -78,21 +93,6 @@ function setupConnection(conn) {
             type: 'peer-list',
             peers: Object.keys(connections)
         });
-    }
-    );
-
-    conn.on('data', (data) => {
-        console.log('got data!');
-        // Handle Mesh: If we receive a list of other peers, connect to them too
-        if (data.type === 'peer-list') {
-            data.peers.forEach(pId => {
-                if (pId !== peer.id)
-                    connectToPeer(pId);
-            }
-            );
-        } else {
-            addMessage(`${conn.peer.substring(0, 4)}: ${data}`, 'peer');
-        }
     }
     );
 
