@@ -4,10 +4,10 @@ const chatBox = document.getElementById('chat-box');
 const messageField = document.getElementById('message-field');
 const sendBtn = document.getElementById('send-btn');
 
-let peer ;
+let peer;
 let connections = {};
 
-function initRoom(){
+function initRoom() {
 
     peer = new Peer('panchatantraAparatchik');
 
@@ -73,26 +73,26 @@ function setupConnection(conn) {
         connections[conn.peer] = conn;
         addMessage(`System: ${conn.peer.substring(0, 5)} joined.`, 'system');
 
-        conn.on('data', (data) => {
-            console.log('got data!');
-            // Handle Mesh: If we receive a list of other peers, connect to them too
-            if (data.type === 'peer-list') {
-                data.peers.forEach(pId => {
-                    if (pId !== peer.id)
-                        connectToPeer(pId);
-                }
-                );
-            } else {
-                addMessage(`${conn.peer.substring(0, 4)}: ${data}`, 'peer');
-            }
-        }
-        );
-
         // Inform the new person about everyone else already in the chat
         conn.send({
             type: 'peer-list',
             peers: Object.keys(connections)
         });
+    }
+    );
+
+    conn.on('data', (data) => {
+        console.log('got data!');
+        // Handle Mesh: If we receive a list of other peers, connect to them too
+        if (data.type === 'peer-list') {
+            data.peers.forEach(pId => {
+                if (pId !== peer.id)
+                    connectToPeer(pId);
+            }
+            );
+        } else {
+            addMessage(`${conn.peer.substring(0, 4)}: ${data}`, 'peer');
+        }
     }
     );
 
