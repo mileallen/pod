@@ -9,7 +9,15 @@ let connections = {};
 
 function initRoom() {
 
-    peer = new Peer('panchatantraAparatchik');
+    peer = new Peer('panchatantraAparatchik',{
+        config: {
+            'iceServers': [{
+                url: 'stun:stun.l.google.com:19302'
+            }, {
+                url: 'stun:stun1.l.google.com:19302'
+            }]
+        }
+    });
 
     peer.on('open', (id) => {
         myIdDisplay.innerText = id;
@@ -41,7 +49,8 @@ function joinRoom() {
     peer.on('open', (id) => {
         myIdDisplay.innerText = id;
 
-        peer.connect('panchatantraAparatchik'); //connectToPeer
+        peer.connect('panchatantraAparatchik');
+        //connectToPeer
 
         messageField.disabled = false;
         sendBtn.disabled = false;
@@ -74,21 +83,20 @@ function setupConnection(conn) {
         addMessage(`System: ${conn.peer.substring(0, 5)} joined.`, 'system');
 
         conn.on('data', (data) => {
-        console.log('got data!');
-        // Handle Mesh: If we receive a list of other peers, connect to them too
-        if (data.type === 'peer-list') {
-            data.peers.forEach(pId => {
-                if (pId !== peer.id)
-                    connectToPeer(pId);
-            }
-            );
+            console.log('got data!');
+            // Handle Mesh: If we receive a list of other peers, connect to them too
+            if (data.type === 'peer-list') {
+                data.peers.forEach(pId => {
+                    if (pId !== peer.id)
+                        connectToPeer(pId);
+                }
+                );
             } else {
                 addMessage(`${conn.peer.substring(0, 4)}: ${data}`, 'peer');
             }
         }
         );
 
-        
         // Inform the new person about everyone else already in the chat
         conn.send({
             type: 'peer-list',
