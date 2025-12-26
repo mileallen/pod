@@ -44,8 +44,16 @@ function initRoom() {
 
 function joinRoom() {
 
-    peer = new Peer();
-
+    peer = new Peer({
+        config: {
+            'iceServers': [{
+                url: 'stun:stun.l.google.com:19302'
+            }, {
+                url: 'stun:stun1.l.google.com:19302'
+            }]
+        }
+    });
+    
     peer.on('open', (id) => {
         myIdDisplay.innerText = id;
 
